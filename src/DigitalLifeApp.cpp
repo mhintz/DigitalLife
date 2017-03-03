@@ -4,6 +4,8 @@
 
 #include "Syphon.h"
 
+#include "FlockingApp.hpp"
+
 using namespace ci;
 using namespace ci::app;
 
@@ -18,6 +20,8 @@ class DigitalLifeApp : public App {
 	void keyDown(KeyEvent evt) override;
 
 	ciSyphon::ServerRef mSyphonServer;
+
+	FlockingApp mFlockingApp;
 };
 
 void DigitalLifeApp::prepareSettings(Settings * settings) {
@@ -30,6 +34,7 @@ void DigitalLifeApp::setup() {
 	mSyphonServer = ciSyphon::Server::create();
 	mSyphonServer->setName("DigitalLifeServer");
 
+	mFlockingApp.setup();
 }
 
 void DigitalLifeApp::keyDown(KeyEvent evt) {
@@ -39,13 +44,21 @@ void DigitalLifeApp::keyDown(KeyEvent evt) {
 }
 
 void DigitalLifeApp::update() {
+	mFlockingApp.update();
 }
 
 void DigitalLifeApp::draw() {
 	gl::clear();
 
+	// gl::TextureCubeMapRef appInstanceCubeMapFrame = mFlockingApp.draw();
+	mFlockingApp.draw();
 
+	// gl::drawEquirectangular(appInstanceCubeMapFrame, toPixels(Rectf(0, 0, getWindowWidth(), getWindowHeight())));
 
+	// Debug zone
+	{
+		gl::drawString(std::to_string(getAverageFps()), vec2(10.0f, 20.0f), ColorA(1.0f, 1.0f, 1.0f, 1.0f));
+	}
 
 	// Publish to Syphon
 
