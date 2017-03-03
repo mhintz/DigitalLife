@@ -1,5 +1,7 @@
 #include "FlockingApp.hpp"
 
+extern uint32_t OUTPUT_CUBE_MAP_SIDE;
+
 void FlockingApp::setup() {
 	mFboSide = sqrt(mNumBirds);
 	mNumBirds = mFboSide * mFboSide;
@@ -93,7 +95,7 @@ void FlockingApp::setup() {
 
 	auto cubeMapFboFmt = FboCubeMapLayered::Format().colorFormat(cubeMapFormat);
 
-	mCubeMapCamera = FboCubeMapLayered::create(mCubeMapCameraSide, mCubeMapCameraSide, cubeMapFboFmt);
+	mCubeMapCamera = FboCubeMapLayered::create(OUTPUT_CUBE_MAP_SIDE, OUTPUT_CUBE_MAP_SIDE, cubeMapFboFmt);
 
 	mCubeMapCameraMatrixBuffer = mCubeMapCamera->generateCameraMatrixBuffer();
 

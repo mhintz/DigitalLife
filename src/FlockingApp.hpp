@@ -55,7 +55,6 @@ public:
 	gl::VboMeshRef mSphereMesh;
 
 	FboCubeMapLayeredRef mCubeMapCamera;
-	uint32_t mCubeMapCameraSide = 1600;
 	gl::UboRef mCubeMapCameraMatrixBuffer;
 	gl::GlslProgRef mTrianglesCubeMapCameraProgram;
 };
