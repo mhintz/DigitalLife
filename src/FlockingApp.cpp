@@ -84,8 +84,20 @@ void FlockingApp::setup() {
 	mCameraUi = CameraUi(& mCamera, ci::app::getWindow());
 
 	mSphereMesh = gl::VboMesh::create(geom::Sphere().colors().center(vec3(0)).radius(1.0f).subdivisions(50));
-	mSphereRenderProg = gl::GlslProg::create(ci::app::loadAsset("renderSphere_v.glsl"), ci::app::loadAsset("renderSphere_f.glsl"));
-	mSphereRenderBatch = gl::Batch::create(mSphereMesh, mSphereRenderProg);
+
+	// Set up the cube map 360 degree camera
+	auto cubeMapFormat = gl::TextureCubeMap::Format()
+		.magFilter(GL_LINEAR)
+		.minFilter(GL_LINEAR)
+		.internalFormat(GL_RGB8);
+
+	auto cubeMapFboFmt = FboCubeMapLayered::Format().colorFormat(cubeMapFormat);
+
+	mCubeMapCamera = FboCubeMapLayered::create(mCubeMapCameraSide, mCubeMapCameraSide, cubeMapFboFmt);
+
+	mCubeMapCameraMatrixBuffer = mCubeMapCamera->generateCameraMatrixBuffer();
+
+	mTrianglesCubeMapCameraProgram = gl::GlslProg::create(ci::app::loadAsset("renderIntoCubeMap_v.glsl"), ci::app::loadAsset("renderBirdSphere_f.glsl"), ci::app::loadAsset("renderIntoCubeMap_triangles_g.glsl"));
 }
 
 void FlockingApp::update()
@@ -118,9 +130,9 @@ void FlockingApp::update()
 	std::swap(mVelocitiesSource, mVelocitiesDest);
 }
 
-void FlockingApp::draw()
+gl::TextureCubeMapRef FlockingApp::draw()
 {
-	// Draw the birds into the FBO
+	// Draw the birds into the flat FBO
 	{
 		gl::ScopedFramebuffer scpFbo(mBirdRenderFbo);
 
@@ -138,18 +150,29 @@ void FlockingApp::draw()
 		mBirdRenderBatch->draw();
 	}
 
-	// Draw the sphere
+	// Draw the sphere into the 360 degree camera FBO
 	{
-		gl::ScopedDepth scpDepth(true);
-		gl::ScopedFaceCulling scpFace(true, GL_BACK);
+		// Bind the 360 camera framebuffer
+		gl::ScopedFramebuffer scpFbo(GL_FRAMEBUFFER, mCubeMapCamera->getId());
 
-		gl::ScopedMatrices scpMat;
-		gl::setMatrices(mCamera);
+		gl::ScopedDepth scpDepth(true);
+		gl::ScopedViewport scpView(0, 0, mCubeMapCamera->getWidth(), mCubeMapCamera->getHeight());
 
 		gl::clear(Color(0, 0, 0));
 
-		gl::ScopedTextureBind scpBirdTex(mBirdRenderFbo->getColorTexture());
+		// Shader uniforms
+		gl::ScopedGlslProg scpShader(mTrianglesCubeMapCameraProgram);
 
-		mSphereRenderBatch->draw();
+		mCubeMapCameraMatrixBuffer->bindBufferBase(mCubeMapCameraMatrixBind);
+		mTrianglesCubeMapCameraProgram->uniformBlock("uMatrices", mCubeMapCameraMatrixBind);
+
+		gl::ScopedTextureBind scpBirdTex(mBirdRenderFbo->getColorTexture(), mRenderedBirdTextureBind);
+		mTrianglesCubeMapCameraProgram->uniform("uBirdsTex", mRenderedBirdTextureBind);
+
+		// Draw the sphere into the 360 camera
+		gl::draw(mSphereMesh);
 	}
+
+	// Return the 360 camera's color texture
+	return mCubeMapCamera->getColorTex();
 }

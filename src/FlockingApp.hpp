@@ -8,6 +8,8 @@
 #include "cinder/Camera.h"
 #include "cinder/CameraUi.h"
 
+#include "FboCubeMapLayered.h"
+
 using namespace ci;
 
 class FlockingApp {
@@ -16,7 +18,7 @@ public:
 
 	void setup();
 	void update();
-	void draw();
+	gl::TextureCubeMapRef draw();
 
 	float mBirdSize = 3.0f;
 	float mMaxSpeed = 2.0f;
@@ -30,6 +32,8 @@ public:
 
 	uint8_t mPosTextureBind = 0;
 	uint8_t mVelTextureBind = 1;
+	uint8_t mCubeMapCameraMatrixBind = 2;
+	uint8_t mRenderedBirdTextureBind = 3;
 
 	gl::FboRef mPositionsSource;
 	gl::FboRef mPositionsDest;
@@ -49,6 +53,9 @@ public:
 	CameraUi mCameraUi;
 
 	gl::VboMeshRef mSphereMesh;
-	gl::GlslProgRef mSphereRenderProg;
-	gl::BatchRef mSphereRenderBatch;
+
+	FboCubeMapLayeredRef mCubeMapCamera;
+	uint32_t mCubeMapCameraSide = 1600;
+	gl::UboRef mCubeMapCameraMatrixBuffer;
+	gl::GlslProgRef mTrianglesCubeMapCameraProgram;
 };

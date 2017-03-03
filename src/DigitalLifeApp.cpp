@@ -50,10 +50,10 @@ void DigitalLifeApp::update() {
 void DigitalLifeApp::draw() {
 	gl::clear();
 
-	// gl::TextureCubeMapRef appInstanceCubeMapFrame = mFlockingApp.draw();
-	mFlockingApp.draw();
+	gl::TextureCubeMapRef appInstanceCubeMapFrame = mFlockingApp.draw();
 
 	// gl::drawEquirectangular(appInstanceCubeMapFrame, toPixels(Rectf(0, 0, getWindowWidth(), getWindowHeight())));
+	gl::drawHorizontalCross(appInstanceCubeMapFrame, toPixels(Rectf(0, 0, getWindowWidth(), getWindowHeight())));
 
 	// Debug zone
 	{
