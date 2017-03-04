@@ -101,8 +101,6 @@ void DigitalLifeApp::update() {
 }
 
 void DigitalLifeApp::draw() {
-	gl::clear();
-
 	gl::TextureCubeMapRef appInstanceCubeMapFrame = mFlockingApp.draw();
 
 	// Draw the cubemap to the wide FBO
@@ -119,6 +117,8 @@ void DigitalLifeApp::draw() {
 
 		mOutputBatch->draw();
 	}
+
+	gl::clear();
 
 	// Debug zone
 	{
