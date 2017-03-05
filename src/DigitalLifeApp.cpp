@@ -6,6 +6,8 @@
 
 #include "Syphon.h"
 
+#include "MeshHelpers.h"
+
 #include "FlockingApp.hpp"
 
 using namespace ci;
@@ -36,49 +38,10 @@ void DigitalLifeApp::prepareSettings(Settings * settings) {
 	settings->setTitle("Digital Life");
 }
 
-void genFace(vec2 ul, vec2 lr, vec3 tu, vec3 tv, vec3 tw, vector<vec2> * positions, vector<vec3> * texCoords) {
-	positions->emplace_back(lr.x, ul.y); // upper-right
-	texCoords->emplace_back(normalize(tw + tu + tv));
-	positions->emplace_back(ul.x, ul.y); // upper-left
-	texCoords->emplace_back(normalize(tw + tv));
-	positions->emplace_back(lr.x, lr.y); // lower-right
-	texCoords->emplace_back(normalize(tw + tu));
-
-	positions->emplace_back(ul.x, lr.y); // lower-left
-	texCoords->emplace_back(normalize(tw));
-	positions->emplace_back(lr.x, lr.y); // lower-right
-	texCoords->emplace_back(normalize(tw + tu));
-	positions->emplace_back(ul.x, ul.y); // upper-left
-	texCoords->emplace_back(normalize(tw + tv));
-}
-
 void DigitalLifeApp::setup() {
 	mOutputFbo = gl::Fbo::create(6 * OUTPUT_CUBE_MAP_SIDE, OUTPUT_CUBE_MAP_SIDE);
 
-	vector<vec2> positions;
-	vector<vec3> texCoords;
-	uint32_t side = OUTPUT_CUBE_MAP_SIDE;
-
-	// Generate six sets of positions and texcoords for drawing the six faces of the cube map
-	// + X
-	genFace(vec2(side * 0, 0), vec2(side * 1, side), vec3(0, 0, -2), vec3(0, 2, 0), vec3(1, -1, 1), & positions, & texCoords);
-	// - X
-	genFace(vec2(side * 1, 0), vec2(side * 2, side), vec3(0, 0, 2), vec3(0, 2, 0), vec3(-1, -1, -1), & positions, & texCoords);
-	// + Y
-	genFace(vec2(side * 2, 0), vec2(side * 3, side), vec3(2, 0, 0), vec3(0, 0, -2), vec3(-1, 1, 1), & positions, & texCoords);
-	// - Y
-	genFace(vec2(side * 3, 0), vec2(side * 4, side), vec3(2, 0, 0), vec3(0, 0, 2), vec3( -1, -1, -1 ), & positions, & texCoords);
-	// + Z
-	genFace(vec2(side * 4, 0), vec2(side * 5, side), vec3(2, 0, 0), vec3(0, 2, 0), vec3(-1, -1, 1), & positions, & texCoords);
-	// - Z
-	genFace(vec2(side * 5, 0), vec2(side * 6, side), vec3(-2, 0, 0), vec3(0, 2, 0), vec3(1, -1, -1), & positions, & texCoords);
-
-	auto posBuf = gl::Vbo::create(GL_ARRAY_BUFFER, positions, GL_STREAM_DRAW);
-	auto posBufLayout = geom::BufferLayout({ geom::AttribInfo(geom::POSITION, 2, 0, 0) });
-	auto texBuf = gl::Vbo::create(GL_ARRAY_BUFFER, texCoords, GL_STREAM_DRAW);
-	auto texBufLayout = geom::BufferLayout({ geom::AttribInfo(geom::TEX_COORD_0, 3, 0, 0) });
-
-	auto outputMesh = gl::VboMesh::create(positions.size(), GL_TRIANGLES, { { posBufLayout, posBuf }, { texBufLayout, texBuf } });
+	auto outputMesh = makeCubeMapRowLayout(OUTPUT_CUBE_MAP_SIDE);
 	auto outputShader = gl::GlslProg::create(loadAsset("drawCubeMapToRect_v.glsl"), loadAsset("drawCubeMapToRect_f.glsl"));
 	outputShader->uniform("uCubeMap", mAppTextureBind);
 
