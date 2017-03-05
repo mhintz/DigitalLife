@@ -1,4 +1,4 @@
-#version 330
+#version 410
 
 in vec4 ciPosition;
 in vec3 ciTexCoord0;

@@ -1,4 +1,4 @@
-#version 330
+#version 410
 
 in vec2 birdIndex;
 in vec4 ciColor;
