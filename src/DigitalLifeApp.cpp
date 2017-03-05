@@ -41,7 +41,7 @@ void DigitalLifeApp::prepareSettings(Settings * settings) {
 void DigitalLifeApp::setup() {
 	mOutputFbo = gl::Fbo::create(6 * OUTPUT_CUBE_MAP_SIDE, OUTPUT_CUBE_MAP_SIDE);
 
-	auto outputMesh = makeCubeMapRowLayout(OUTPUT_CUBE_MAP_SIDE);
+	auto outputMesh = makeCubeMapToRowLayoutMesh(OUTPUT_CUBE_MAP_SIDE);
 	auto outputShader = gl::GlslProg::create(loadAsset("drawCubeMapToRect_v.glsl"), loadAsset("drawCubeMapToRect_f.glsl"));
 	outputShader->uniform("uCubeMap", mAppTextureBind);
 
@@ -85,8 +85,8 @@ void DigitalLifeApp::draw() {
 
 	// Debug zone
 	{
-		// gl::drawEquirectangular(appInstanceCubeMapFrame, toPixels(Rectf(0, 0, getWindowWidth(), getWindowHeight())));
-		gl::drawHorizontalCross(appInstanceCubeMapFrame, toPixels(Rectf(0, 0, getWindowWidth(), getWindowHeight())));
+		// gl::drawEquirectangular(appInstanceCubeMapFrame, Rectf(0, 0, getWindowWidth(), getWindowHeight()));
+		gl::drawHorizontalCross(appInstanceCubeMapFrame, Rectf(0, 0, getWindowWidth(), getWindowHeight()));
 
 		// gl::draw(mOutputFbo->getColorTexture(), Rectf(0, 0, getWindowWidth(), getWindowHeight() / 3));
 
