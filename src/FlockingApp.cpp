@@ -1,4 +1,4 @@
-#include "FlockingApp.hpp"
+#include "FlockingApp.h"
 
 extern uint32_t OUTPUT_CUBE_MAP_SIDE;
 

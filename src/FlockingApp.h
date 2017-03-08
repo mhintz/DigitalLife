@@ -5,8 +5,6 @@
 #include "cinder/app/App.h"
 #include "cinder/gl/gl.h"
 #include "cinder/Rand.h"
-#include "cinder/Camera.h"
-#include "cinder/CameraUi.h"
 
 #include "FboCubeMapLayered.h"
 
@@ -27,7 +25,7 @@ public:
 	ivec2 mRenderFboSize = ivec2(2000, 1000);
 
 //	int mNumBirds = 8192;
-	int mNumBirds = 64 * 64;
+	int mNumBirds = 64 * 64; // 4096
 
 	int mFboSide;
 
