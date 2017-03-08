@@ -9,6 +9,7 @@
 #include "MeshHelpers.h"
 
 #include "FlockingApp.h"
+#include "ReactionDiffusionApp.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -31,6 +32,7 @@ class DigitalLifeApp : public App {
 	gl::BatchRef mOutputBatch;
 	ciSyphon::ServerRef mSyphonServer;
 
+	ReactionDiffusionApp mReactionDiffusionApp;
 	FlockingApp mFlockingApp;
 };
 
@@ -50,6 +52,7 @@ void DigitalLifeApp::setup() {
 	mSyphonServer = ciSyphon::Server::create();
 	mSyphonServer->setName("DigitalLifeServer");
 
+	mReactionDiffusionApp.setup();
 	mFlockingApp.setup();
 }
 
@@ -60,11 +63,13 @@ void DigitalLifeApp::keyDown(KeyEvent evt) {
 }
 
 void DigitalLifeApp::update() {
-	mFlockingApp.update();
+	mReactionDiffusionApp.update();
+	// mFlockingApp.update();
 }
 
 void DigitalLifeApp::draw() {
-	gl::TextureCubeMapRef appInstanceCubeMapFrame = mFlockingApp.draw();
+	gl::TextureCubeMapRef appInstanceCubeMapFrame = mReactionDiffusionApp.draw();
+	// gl::TextureCubeMapRef appInstanceCubeMapFrame = mFlockingApp.draw();
 
 	// Draw the cubemap to the wide FBO
 	{

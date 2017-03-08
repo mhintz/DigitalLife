@@ -28,6 +28,7 @@
 		BD6F24741E904E3899031258 /* GeomEater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B810681E786D4A0FBB64B4F8 /* GeomEater.cpp */; };
 		E50BD60A8F33414187EB8AAC /* MeshHelpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 66EEADD5ACF54C6A8B753D0A /* MeshHelpers.cpp */; };
 		E9C7F784DA234E0CB055E6D1 /* CoreMath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D25F282B84A76AF017FD0 /* CoreMath.cpp */; };
+		EF0262E41E70660E005669EA /* ReactionDiffusionApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF0262E21E70660E005669EA /* ReactionDiffusionApp.cpp */; };
 		EFE332821E69B3D0000B68EA /* Client.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFE3327C1E69B3D0000B68EA /* Client.mm */; };
 		EFE332831E69B3D0000B68EA /* Server.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFE3327E1E69B3D0000B68EA /* Server.mm */; };
 		EFE332841E69B3D0000B68EA /* ServerDirectory.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFE332801E69B3D0000B68EA /* ServerDirectory.mm */; };
@@ -87,6 +88,8 @@
 		CEB359266C3B43DE894F4B27 /* Node.hpp */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = Node.hpp; path = "../../../cinder/blocks/core-util/Node.hpp"; sourceTree = "<group>"; };
 		DE9973E87F0D434589C7A2CD /* FboCubeMapLayered.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FboCubeMapLayered.h; path = "../../../cinder/blocks/core-util/FboCubeMapLayered.h"; sourceTree = "<group>"; };
 		EF0262DE1E7065DB005669EA /* FlockingApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlockingApp.h; path = ../src/FlockingApp.h; sourceTree = "<group>"; };
+		EF0262E21E70660E005669EA /* ReactionDiffusionApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ReactionDiffusionApp.cpp; path = ../src/ReactionDiffusionApp.cpp; sourceTree = "<group>"; };
+		EF0262E31E70660E005669EA /* ReactionDiffusionApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReactionDiffusionApp.h; path = ../src/ReactionDiffusionApp.h; sourceTree = "<group>"; };
 		EF80FF07EE1D425A96D45DC1 /* DigitalLife_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = DigitalLife_Prefix.pch; sourceTree = "<group>"; };
 		EFE3327B1E69B3D0000B68EA /* Client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Client.h; path = "../../../cinder/blocks/Cinder-Syphon/src/Client.h"; sourceTree = "<group>"; };
 		EFE3327C1E69B3D0000B68EA /* Client.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Client.mm; path = "../../../cinder/blocks/Cinder-Syphon/src/Client.mm"; sourceTree = "<group>"; };
@@ -147,6 +150,8 @@
 			children = (
 				98984B151EE6400C84D3E77F /* DigitalLifeApp.cpp */,
 				EFE696361E69CEA200CD4E51 /* FlockingApp.cpp */,
+				EF0262E21E70660E005669EA /* ReactionDiffusionApp.cpp */,
+				EF0262E31E70660E005669EA /* ReactionDiffusionApp.h */,
 				EF0262DE1E7065DB005669EA /* FlockingApp.h */,
 			);
 			name = Source;
@@ -369,6 +374,7 @@
 				7C742F433B4A42AFB4C1E663 /* SyphonNameboundClient.m in Sources */,
 				E9C7F784DA234E0CB055E6D1 /* CoreMath.cpp in Sources */,
 				8299D319089E44F8B0BF893F /* DoubleFbo.cpp in Sources */,
+				EF0262E41E70660E005669EA /* ReactionDiffusionApp.cpp in Sources */,
 				EFE6965E1E6D9C3200CD4E51 /* Vertex.cpp in Sources */,
 				EFE6965B1E6D9C3200CD4E51 /* Mesh.cpp in Sources */,
 				EFE332821E69B3D0000B68EA /* Client.mm in Sources */,
