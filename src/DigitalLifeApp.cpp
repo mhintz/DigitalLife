@@ -19,6 +19,12 @@ using std::vector;
 
 uint32_t OUTPUT_CUBE_MAP_SIDE = 512;
 
+enum class AppType {
+	REACTION_DIFFUSION,
+	FLOCKING,
+	NETWORK
+};
+
 class DigitalLifeApp : public App {
   public:
 	static void prepareSettings(Settings * settings);
@@ -34,12 +40,15 @@ class DigitalLifeApp : public App {
 	gl::BatchRef mOutputBatch;
 	ciSyphon::ServerRef mSyphonServer;
 
+	AppType mActiveAppType = AppType::REACTION_DIFFUSION;
+
 	CameraPersp mCamera;
 	CameraUi mCameraUi;
 	gl::GlslProgRef mRenderTexAsSphereShader;
 
 	ReactionDiffusionApp mReactionDiffusionApp;
 	FlockingApp mFlockingApp;
+	// NetworkApp mNetworkApp;
 };
 
 void DigitalLifeApp::prepareSettings(Settings * settings) {
@@ -69,17 +78,30 @@ void DigitalLifeApp::setup() {
 void DigitalLifeApp::keyDown(KeyEvent evt) {
 	if (evt.getCode() == KeyEvent::KEY_ESCAPE) {
 		quit();
+	} else if (evt.getCode() == KeyEvent::KEY_1) {
+		mActiveAppType = AppType::REACTION_DIFFUSION;
+	} else if (evt.getCode() == KeyEvent::KEY_2) {
+		mActiveAppType = AppType::FLOCKING;
+	} else if (evt.getCode() == KeyEvent::KEY_3) {
+		mActiveAppType = AppType::NETWORK;
 	}
 }
 
 void DigitalLifeApp::update() {
-	mReactionDiffusionApp.update();
-	// mFlockingApp.update();
+	switch (mActiveAppType) {
+		case AppType::REACTION_DIFFUSION: mReactionDiffusionApp.update();break;
+		case AppType::FLOCKING: mFlockingApp.update();break;
+		case AppType::NETWORK: break;
+	}
 }
 
 void DigitalLifeApp::draw() {
-	gl::TextureCubeMapRef appInstanceCubeMapFrame = mReactionDiffusionApp.draw();
-	// gl::TextureCubeMapRef appInstanceCubeMapFrame = mFlockingApp.draw();
+	gl::TextureCubeMapRef appInstanceCubeMapFrame;
+	switch (mActiveAppType) {
+		case AppType::REACTION_DIFFUSION: appInstanceCubeMapFrame = mReactionDiffusionApp.draw(); break;
+		case AppType::FLOCKING: appInstanceCubeMapFrame = mFlockingApp.draw(); break;
+		case AppType::NETWORK: break;
+	}
 
 	// Draw the cubemap to the wide FBO
 	{
