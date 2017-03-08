@@ -3,6 +3,8 @@
 #include "cinder/app/App.h"
 #include "cinder/app/RendererGl.h"
 #include "cinder/gl/gl.h"
+#include "cinder/Camera.h"
+#include "cinder/CameraUi.h"
 
 #include "Syphon.h"
 
@@ -32,6 +34,10 @@ class DigitalLifeApp : public App {
 	gl::BatchRef mOutputBatch;
 	ciSyphon::ServerRef mSyphonServer;
 
+	CameraPersp mCamera;
+	CameraUi mCameraUi;
+	gl::GlslProgRef mRenderTexAsSphereShader;
+
 	ReactionDiffusionApp mReactionDiffusionApp;
 	FlockingApp mFlockingApp;
 };
@@ -51,6 +57,10 @@ void DigitalLifeApp::setup() {
 
 	mSyphonServer = ciSyphon::Server::create();
 	mSyphonServer->setName("DigitalLifeServer");
+
+	mCamera.lookAt(vec3(0, 0, 4), vec3(0), vec3(0, 1, 0));
+	mCameraUi = CameraUi(& mCamera, getWindow());
+	mRenderTexAsSphereShader = gl::GlslProg::create(loadAsset("renderOutputTexAsSphere_v.glsl"), loadAsset("renderOutputTexAsSphere_f.glsl"));
 
 	mReactionDiffusionApp.setup();
 	mFlockingApp.setup();
@@ -90,6 +100,19 @@ void DigitalLifeApp::draw() {
 
 	// Debug zone
 	{
+		// {
+		// 	gl::ScopedDepth scpDepth(true);
+		// 	gl::ScopedFaceCulling scpCull(true, GL_BACK);
+
+		// 	gl::ScopedMatrices scpMat;
+		// 	gl::setMatrices(mCamera);
+
+		// 	gl::ScopedTextureBind scpTex(appInstanceCubeMapFrame);
+		// 	gl::ScopedGlslProg scpShader(mRenderTexAsSphereShader);
+
+		// 	gl::draw(geom::Sphere().center(vec3(0)).radius(1.0f).subdivisions(50));
+		// }
+
 		// gl::drawEquirectangular(appInstanceCubeMapFrame, Rectf(0, 0, getWindowWidth(), getWindowHeight()));
 		gl::drawHorizontalCross(appInstanceCubeMapFrame, Rectf(0, 0, getWindowWidth(), getWindowHeight()));
 
