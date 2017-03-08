@@ -1,5 +1,7 @@
 #include "FlockingApp.h"
 
+using namespace ci;
+
 extern uint32_t OUTPUT_CUBE_MAP_SIDE;
 
 void FlockingApp::setup() {
@@ -50,14 +52,14 @@ void FlockingApp::setup() {
 	mVelocitiesDest = gl::Fbo::create(mFboSide, mFboSide, fboDefaultFmt);
 
 	// Initialize the birds update routine
-	mBirdPosUpdateProg = gl::GlslProg::create(ci::app::loadAsset("runBirds_v.glsl"), ci::app::loadAsset("runBirdsPosition_f.glsl"));
+	mBirdPosUpdateProg = gl::GlslProg::create(app::loadAsset("runBirds_v.glsl"), app::loadAsset("runBirdsPosition_f.glsl"));
 	mBirdPosUpdateProg->uniform("uGridSide", mFboSide);
 	mBirdPosUpdateProg->uniform("uScreenWidth", mRenderFboSize.x);
 	mBirdPosUpdateProg->uniform("uScreenHeight", mRenderFboSize.y);
 	mBirdPosUpdateProg->uniform("uPositions", mPosTextureBind);
 	mBirdPosUpdateProg->uniform("uVelocities", mVelTextureBind);
 
-	mBirdVelUpdateProg = gl::GlslProg::create(ci::app::loadAsset("runBirds_v.glsl"), ci::app::loadAsset("runBirdsVelocity_f.glsl"));
+	mBirdVelUpdateProg = gl::GlslProg::create(app::loadAsset("runBirds_v.glsl"), app::loadAsset("runBirdsVelocity_f.glsl"));
 	mBirdVelUpdateProg->uniform("uGridSide", mFboSide);
 	mBirdVelUpdateProg->uniform("uPositions", mPosTextureBind);
 	mBirdVelUpdateProg->uniform("uVelocities", mVelTextureBind);
@@ -74,7 +76,7 @@ void FlockingApp::setup() {
 	mBirdIndexMesh = gl::VboMesh::create(posIndex.size(), GL_POINTS, { { birdsBufferLayout, birdsVbo } });
 
 	// Initialize the birds render routine
-	mBirdRenderProg = gl::GlslProg::create(ci::app::loadAsset("renderBirds_v.glsl"), ci::app::loadAsset("renderBirds_f.glsl"), ci::app::loadAsset("renderBirds_g.glsl"));
+	mBirdRenderProg = gl::GlslProg::create(app::loadAsset("renderBirds_v.glsl"), app::loadAsset("renderBirds_f.glsl"), app::loadAsset("renderBirds_g.glsl"));
 	mBirdRenderProg->uniform("uBirdSize", mBirdSize);
 	mBirdRenderProg->uniform("uBirdPositions", mPosTextureBind);
 	mBirdRenderProg->uniform("uBirdVelocities", mVelTextureBind);
@@ -96,7 +98,7 @@ void FlockingApp::setup() {
 
 	mCubeMapCameraMatrixBuffer = mCubeMapCamera->generateCameraMatrixBuffer();
 
-	mTrianglesCubeMapCameraProgram = gl::GlslProg::create(ci::app::loadAsset("renderIntoCubeMap_v.glsl"), ci::app::loadAsset("renderBirdSphere_f.glsl"), ci::app::loadAsset("renderIntoCubeMap_triangles_g.glsl"));
+	mTrianglesCubeMapCameraProgram = gl::GlslProg::create(app::loadAsset("renderIntoCubeMap_v.glsl"), app::loadAsset("renderBirdSphere_f.glsl"), app::loadAsset("renderIntoCubeMap_triangles_g.glsl"));
 }
 
 void FlockingApp::update()

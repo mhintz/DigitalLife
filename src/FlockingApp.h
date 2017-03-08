@@ -8,21 +8,19 @@
 
 #include "FboCubeMapLayered.h"
 
-using namespace ci;
-
 class FlockingApp {
 public:
 	FlockingApp() {};
 
 	void setup();
 	void update();
-	gl::TextureCubeMapRef draw();
+	ci::gl::TextureCubeMapRef draw();
 
 	float mBirdSize = 3.0f;
 	float mMaxSpeed = 2.0f;
 	float mMaxForce = 0.03f;
 
-	ivec2 mRenderFboSize = ivec2(2000, 1000);
+	ci::ivec2 mRenderFboSize = ci::ivec2(2000, 1000);
 
 //	int mNumBirds = 8192;
 	int mNumBirds = 64 * 64; // 4096
@@ -34,23 +32,23 @@ public:
 	uint8_t mCubeMapCameraMatrixBind = 2;
 	uint8_t mRenderedBirdTextureBind = 3;
 
-	gl::FboRef mPositionsSource;
-	gl::FboRef mPositionsDest;
-	gl::FboRef mVelocitiesSource;
-	gl::FboRef mVelocitiesDest;
+	ci::gl::FboRef mPositionsSource;
+	ci::gl::FboRef mPositionsDest;
+	ci::gl::FboRef mVelocitiesSource;
+	ci::gl::FboRef mVelocitiesDest;
 
-	gl::GlslProgRef mBirdPosUpdateProg;
-	gl::GlslProgRef mBirdVelUpdateProg;
+	ci::gl::GlslProgRef mBirdPosUpdateProg;
+	ci::gl::GlslProgRef mBirdVelUpdateProg;
 
-	gl::VboMeshRef mBirdIndexMesh;
-	gl::GlslProgRef mBirdRenderProg;
-	gl::BatchRef mBirdRenderBatch;
+	ci::gl::VboMeshRef mBirdIndexMesh;
+	ci::gl::GlslProgRef mBirdRenderProg;
+	ci::gl::BatchRef mBirdRenderBatch;
 
-	gl::FboRef mBirdRenderFbo;
+	ci::gl::FboRef mBirdRenderFbo;
 
-	gl::VboMeshRef mSphereMesh;
+	ci::gl::VboMeshRef mSphereMesh;
 
 	FboCubeMapLayeredRef mCubeMapCamera;
-	gl::UboRef mCubeMapCameraMatrixBuffer;
-	gl::GlslProgRef mTrianglesCubeMapCameraProgram;
+	ci::gl::UboRef mCubeMapCameraMatrixBuffer;
+	ci::gl::GlslProgRef mTrianglesCubeMapCameraProgram;
 };
