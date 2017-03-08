@@ -14,7 +14,7 @@ using namespace ci;
 using namespace ci::app;
 using std::vector;
 
-uint32_t OUTPUT_CUBE_MAP_SIDE = 1600;
+uint32_t OUTPUT_CUBE_MAP_SIDE = 512;
 
 class DigitalLifeApp : public App {
   public:
