@@ -10,8 +10,9 @@
 
 #include "MeshHelpers.h"
 
-#include "FlockingApp.h"
 #include "ReactionDiffusionApp.h"
+#include "FlockingApp.h"
+#include "NetworkApp.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -48,7 +49,7 @@ class DigitalLifeApp : public App {
 
 	ReactionDiffusionApp mReactionDiffusionApp;
 	FlockingApp mFlockingApp;
-	// NetworkApp mNetworkApp;
+	NetworkApp mNetworkApp;
 };
 
 void DigitalLifeApp::prepareSettings(Settings * settings) {
@@ -73,6 +74,7 @@ void DigitalLifeApp::setup() {
 
 	mReactionDiffusionApp.setup();
 	mFlockingApp.setup();
+	mNetworkApp.setup();
 }
 
 void DigitalLifeApp::keyDown(KeyEvent evt) {
@@ -91,7 +93,7 @@ void DigitalLifeApp::update() {
 	switch (mActiveAppType) {
 		case AppType::REACTION_DIFFUSION: mReactionDiffusionApp.update();break;
 		case AppType::FLOCKING: mFlockingApp.update();break;
-		case AppType::NETWORK: break;
+		case AppType::NETWORK: mNetworkApp.update(); break;
 	}
 }
 
@@ -100,7 +102,7 @@ void DigitalLifeApp::draw() {
 	switch (mActiveAppType) {
 		case AppType::REACTION_DIFFUSION: appInstanceCubeMapFrame = mReactionDiffusionApp.draw(); break;
 		case AppType::FLOCKING: appInstanceCubeMapFrame = mFlockingApp.draw(); break;
-		case AppType::NETWORK: break;
+		case AppType::NETWORK: appInstanceCubeMapFrame = mNetworkApp.draw(); break;
 	}
 
 	// Draw the cubemap to the wide FBO

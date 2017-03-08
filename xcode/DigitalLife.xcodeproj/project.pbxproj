@@ -29,6 +29,7 @@
 		E50BD60A8F33414187EB8AAC /* MeshHelpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 66EEADD5ACF54C6A8B753D0A /* MeshHelpers.cpp */; };
 		E9C7F784DA234E0CB055E6D1 /* CoreMath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D25F282B84A76AF017FD0 /* CoreMath.cpp */; };
 		EF0262E41E70660E005669EA /* ReactionDiffusionApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF0262E21E70660E005669EA /* ReactionDiffusionApp.cpp */; };
+		EF0263081E70AAA8005669EA /* NetworkApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF0263061E70AAA8005669EA /* NetworkApp.cpp */; };
 		EFE332821E69B3D0000B68EA /* Client.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFE3327C1E69B3D0000B68EA /* Client.mm */; };
 		EFE332831E69B3D0000B68EA /* Server.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFE3327E1E69B3D0000B68EA /* Server.mm */; };
 		EFE332841E69B3D0000B68EA /* ServerDirectory.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFE332801E69B3D0000B68EA /* ServerDirectory.mm */; };
@@ -90,6 +91,8 @@
 		EF0262DE1E7065DB005669EA /* FlockingApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlockingApp.h; path = ../src/FlockingApp.h; sourceTree = "<group>"; };
 		EF0262E21E70660E005669EA /* ReactionDiffusionApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ReactionDiffusionApp.cpp; path = ../src/ReactionDiffusionApp.cpp; sourceTree = "<group>"; };
 		EF0262E31E70660E005669EA /* ReactionDiffusionApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReactionDiffusionApp.h; path = ../src/ReactionDiffusionApp.h; sourceTree = "<group>"; };
+		EF0263061E70AAA8005669EA /* NetworkApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NetworkApp.cpp; path = ../src/NetworkApp.cpp; sourceTree = "<group>"; };
+		EF0263071E70AAA8005669EA /* NetworkApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NetworkApp.h; path = ../src/NetworkApp.h; sourceTree = "<group>"; };
 		EF80FF07EE1D425A96D45DC1 /* DigitalLife_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = DigitalLife_Prefix.pch; sourceTree = "<group>"; };
 		EFE3327B1E69B3D0000B68EA /* Client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Client.h; path = "../../../cinder/blocks/Cinder-Syphon/src/Client.h"; sourceTree = "<group>"; };
 		EFE3327C1E69B3D0000B68EA /* Client.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Client.mm; path = "../../../cinder/blocks/Cinder-Syphon/src/Client.mm"; sourceTree = "<group>"; };
@@ -148,6 +151,8 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				EF0263061E70AAA8005669EA /* NetworkApp.cpp */,
+				EF0263071E70AAA8005669EA /* NetworkApp.h */,
 				98984B151EE6400C84D3E77F /* DigitalLifeApp.cpp */,
 				EFE696361E69CEA200CD4E51 /* FlockingApp.cpp */,
 				EF0262E21E70660E005669EA /* ReactionDiffusionApp.cpp */,
@@ -370,6 +375,7 @@
 			files = (
 				EFE332841E69B3D0000B68EA /* ServerDirectory.mm in Sources */,
 				187964A5AE854A3A8AC22814 /* DigitalLifeApp.cpp in Sources */,
+				EF0263081E70AAA8005669EA /* NetworkApp.cpp in Sources */,
 				EFE332831E69B3D0000B68EA /* Server.mm in Sources */,
 				7C742F433B4A42AFB4C1E663 /* SyphonNameboundClient.m in Sources */,
 				E9C7F784DA234E0CB055E6D1 /* CoreMath.cpp in Sources */,
