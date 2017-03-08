@@ -26,7 +26,8 @@ public:
 
 	ivec2 mRenderFboSize = ivec2(2000, 1000);
 
-	int mNumBirds = 8192;
+//	int mNumBirds = 8192;
+	int mNumBirds = 64 * 64;
 
 	int mFboSide;
 

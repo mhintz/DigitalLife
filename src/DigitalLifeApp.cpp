@@ -8,7 +8,7 @@
 
 #include "MeshHelpers.h"
 
-#include "FlockingApp.hpp"
+#include "FlockingApp.h"
 
 using namespace ci;
 using namespace ci::app;

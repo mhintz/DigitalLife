@@ -86,6 +86,7 @@
 		C9E2A5A46CF04BEEAFC18753 /* DoubleFbo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DoubleFbo.h; path = "../../../cinder/blocks/core-util/DoubleFbo.h"; sourceTree = "<group>"; };
 		CEB359266C3B43DE894F4B27 /* Node.hpp */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = Node.hpp; path = "../../../cinder/blocks/core-util/Node.hpp"; sourceTree = "<group>"; };
 		DE9973E87F0D434589C7A2CD /* FboCubeMapLayered.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FboCubeMapLayered.h; path = "../../../cinder/blocks/core-util/FboCubeMapLayered.h"; sourceTree = "<group>"; };
+		EF0262DE1E7065DB005669EA /* FlockingApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlockingApp.h; path = ../src/FlockingApp.h; sourceTree = "<group>"; };
 		EF80FF07EE1D425A96D45DC1 /* DigitalLife_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = DigitalLife_Prefix.pch; sourceTree = "<group>"; };
 		EFE3327B1E69B3D0000B68EA /* Client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Client.h; path = "../../../cinder/blocks/Cinder-Syphon/src/Client.h"; sourceTree = "<group>"; };
 		EFE3327C1E69B3D0000B68EA /* Client.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Client.mm; path = "../../../cinder/blocks/Cinder-Syphon/src/Client.mm"; sourceTree = "<group>"; };
@@ -95,7 +96,6 @@
 		EFE332801E69B3D0000B68EA /* ServerDirectory.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ServerDirectory.mm; path = "../../../cinder/blocks/Cinder-Syphon/src/ServerDirectory.mm"; sourceTree = "<group>"; };
 		EFE332811E69B3D0000B68EA /* Syphon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Syphon.h; path = "../../../cinder/blocks/Cinder-Syphon/src/Syphon.h"; sourceTree = "<group>"; };
 		EFE696361E69CEA200CD4E51 /* FlockingApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FlockingApp.cpp; path = ../src/FlockingApp.cpp; sourceTree = "<group>"; };
-		EFE696371E69CEA200CD4E51 /* FlockingApp.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = FlockingApp.hpp; path = ../src/FlockingApp.hpp; sourceTree = "<group>"; };
 		EFE696511E6D9C3200CD4E51 /* buildmesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = buildmesh.h; path = ../../../cinder/blocks/buildmesh/buildmesh.h; sourceTree = "<group>"; };
 		EFE696521E6D9C3200CD4E51 /* MathBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MathBase.h; path = ../../../cinder/blocks/buildmesh/MathBase.h; sourceTree = "<group>"; };
 		EFE696531E6D9C3200CD4E51 /* Mesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Mesh.cpp; path = ../../../cinder/blocks/buildmesh/Mesh.cpp; sourceTree = "<group>"; };
@@ -147,7 +147,7 @@
 			children = (
 				98984B151EE6400C84D3E77F /* DigitalLifeApp.cpp */,
 				EFE696361E69CEA200CD4E51 /* FlockingApp.cpp */,
-				EFE696371E69CEA200CD4E51 /* FlockingApp.hpp */,
+				EF0262DE1E7065DB005669EA /* FlockingApp.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
