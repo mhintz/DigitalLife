@@ -82,9 +82,6 @@ void FlockingApp::setup() {
 
 	mBirdRenderFbo = gl::Fbo::create(mRenderFboSize.x, mRenderFboSize.y);
 
-	mCamera.lookAt(vec3(0, 0, 4), vec3(0), vec3(0, 1, 0));
-	mCameraUi = CameraUi(& mCamera, ci::app::getWindow());
-
 	mSphereMesh = gl::VboMesh::create(geom::Sphere().colors().center(vec3(0)).radius(1.0f).subdivisions(50));
 
 	// Set up the cube map 360 degree camera

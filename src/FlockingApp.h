@@ -50,9 +50,6 @@ public:
 
 	gl::FboRef mBirdRenderFbo;
 
-	CameraPersp mCamera;
-	CameraUi mCameraUi;
-
 	gl::VboMeshRef mSphereMesh;
 
 	FboCubeMapLayeredRef mCubeMapCamera;
