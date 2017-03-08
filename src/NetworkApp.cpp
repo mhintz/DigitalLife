@@ -3,10 +3,6 @@
 using namespace ci;
 using std::vector;
 
-int const numNetworkNodes = 600;
-int const cubeMapSide = 1600;
-int const cubeMapBindPoint = 0;
-
 extern uint32_t OUTPUT_CUBE_MAP_SIDE;
 
 void NetworkApp::setup()
@@ -33,7 +29,7 @@ void NetworkApp::setup()
 	mRenderPointsToCubeMap->uniformBlock("uMatrices", matrixBindingPoint);
 
 	// Set up the simulation data
-	for (int idx = 0; idx < numNetworkNodes; idx++) {
+	for (int idx = 0; idx < mNumNetworkNodes; idx++) {
 		mNetworkNodes.push_back(NetworkNode(idx, randVec3()));
 		if (randFloat() < 0.1) { mNetworkNodes[idx].mInfected = true; }
 	}
@@ -115,7 +111,7 @@ void NetworkApp::update()
 	uint numInfected = std::accumulate(willBeInfected.begin(), willBeInfected.end(), 0, [] (uint count, bool inf) { return count + (inf ? 1 : 0); });
 	if (numInfected < 10) {
 		for (auto & node : mNetworkNodes) {
-			if (randFloat() < 10.f / numNetworkNodes) { node.mInfected = true; }
+			if (randFloat() < 10.f / mNumNetworkNodes) { node.mInfected = true; }
 		}
 	}
 

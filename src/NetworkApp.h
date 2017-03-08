@@ -31,6 +31,8 @@ public:
 	void update();
 	ci::gl::TextureCubeMapRef draw();
 
+	int const mNumNetworkNodes = 1024;
+
 	std::vector<NetworkNode> mNetworkNodes;
 	std::vector<std::pair<uint, uint>> mNetworkLinks;
 
