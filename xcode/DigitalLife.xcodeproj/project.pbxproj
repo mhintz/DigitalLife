@@ -30,6 +30,7 @@
 		E9C7F784DA234E0CB055E6D1 /* CoreMath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D25F282B84A76AF017FD0 /* CoreMath.cpp */; };
 		EF0262E41E70660E005669EA /* ReactionDiffusionApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF0262E21E70660E005669EA /* ReactionDiffusionApp.cpp */; };
 		EF0263081E70AAA8005669EA /* NetworkApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF0263061E70AAA8005669EA /* NetworkApp.cpp */; };
+		EF9552A21E92AC3800DF9719 /* Projector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF9552A01E92AC3800DF9719 /* Projector.cpp */; };
 		EFE332821E69B3D0000B68EA /* Client.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFE3327C1E69B3D0000B68EA /* Client.mm */; };
 		EFE332831E69B3D0000B68EA /* Server.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFE3327E1E69B3D0000B68EA /* Server.mm */; };
 		EFE332841E69B3D0000B68EA /* ServerDirectory.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFE332801E69B3D0000B68EA /* ServerDirectory.mm */; };
@@ -94,6 +95,8 @@
 		EF0263061E70AAA8005669EA /* NetworkApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NetworkApp.cpp; path = ../src/NetworkApp.cpp; sourceTree = "<group>"; };
 		EF0263071E70AAA8005669EA /* NetworkApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NetworkApp.h; path = ../src/NetworkApp.h; sourceTree = "<group>"; };
 		EF80FF07EE1D425A96D45DC1 /* DigitalLife_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = DigitalLife_Prefix.pch; sourceTree = "<group>"; };
+		EF9552A01E92AC3800DF9719 /* Projector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Projector.cpp; path = "../../../cinder/blocks/core-util/Projector.cpp"; sourceTree = "<group>"; };
+		EF9552A11E92AC3800DF9719 /* Projector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Projector.h; path = "../../../cinder/blocks/core-util/Projector.h"; sourceTree = "<group>"; };
 		EFE3327B1E69B3D0000B68EA /* Client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Client.h; path = "../../../cinder/blocks/Cinder-Syphon/src/Client.h"; sourceTree = "<group>"; };
 		EFE3327C1E69B3D0000B68EA /* Client.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Client.mm; path = "../../../cinder/blocks/Cinder-Syphon/src/Client.mm"; sourceTree = "<group>"; };
 		EFE3327D1E69B3D0000B68EA /* Server.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Server.h; path = "../../../cinder/blocks/Cinder-Syphon/src/Server.h"; sourceTree = "<group>"; };
@@ -210,6 +213,8 @@
 		275F6ABBD6BB4B65A2BB7A4A /* core-util */ = {
 			isa = PBXGroup;
 			children = (
+				EF9552A01E92AC3800DF9719 /* Projector.cpp */,
+				EF9552A11E92AC3800DF9719 /* Projector.h */,
 				36C87ACB79CD48EE85FCBE9B /* CoreMath.h */,
 				2C8D25F282B84A76AF017FD0 /* CoreMath.cpp */,
 				C9E2A5A46CF04BEEAFC18753 /* DoubleFbo.h */,
@@ -375,6 +380,7 @@
 			files = (
 				EFE332841E69B3D0000B68EA /* ServerDirectory.mm in Sources */,
 				187964A5AE854A3A8AC22814 /* DigitalLifeApp.cpp in Sources */,
+				EF9552A21E92AC3800DF9719 /* Projector.cpp in Sources */,
 				EF0263081E70AAA8005669EA /* NetworkApp.cpp in Sources */,
 				EFE332831E69B3D0000B68EA /* Server.mm in Sources */,
 				7C742F433B4A42AFB4C1E663 /* SyphonNameboundClient.m in Sources */,
