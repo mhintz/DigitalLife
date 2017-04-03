@@ -408,7 +408,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"../../../cinder/blocks/Cinder-Syphon/lib\"";
+				FRAMEWORK_SEARCH_PATHS = "\"$(CINDER_PATH)/blocks/Cinder-Syphon/lib\"";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -435,7 +435,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = "\"../../../cinder/blocks/Cinder-Syphon/lib\"";
+				FRAMEWORK_SEARCH_PATHS = "\"$(CINDER_PATH)/blocks/Cinder-Syphon/lib\"";
 				GCC_FAST_MATH = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
