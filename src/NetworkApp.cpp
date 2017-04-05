@@ -22,10 +22,10 @@ void NetworkApp::setup()
 	mMatrixBuffer = mOutputCubeFbo->generateCameraMatrixBuffer();
 	mMatrixBuffer->bindBufferBase(matrixBindingPoint);
 
-	mRenderLinesToCubeMap = gl::GlslProg::create(app::loadAsset("renderIntoCubeMap_v.glsl"), app::loadAsset("renderIntoCubeMap_f.glsl"), app::loadAsset("renderIntoCubeMap_lines_g.glsl"));
+	mRenderLinesToCubeMap = gl::GlslProg::create(app::loadAsset("DLRenderIntoCubeMap_v.glsl"), app::loadAsset("NTRenderIntoCubeMap_f.glsl"), app::loadAsset("DLRenderIntoCubeMap_lines_g.glsl"));
 	mRenderLinesToCubeMap->uniformBlock("uMatrices", matrixBindingPoint);
 
-	mRenderPointsToCubeMap = gl::GlslProg::create(app::loadAsset("renderIntoCubeMap_v.glsl"), app::loadAsset("renderIntoCubeMap_f.glsl"), app::loadAsset("renderIntoCubeMap_points_g.glsl"));
+	mRenderPointsToCubeMap = gl::GlslProg::create(app::loadAsset("DLRenderIntoCubeMap_v.glsl"), app::loadAsset("NTRenderIntoCubeMap_f.glsl"), app::loadAsset("DLRenderIntoCubeMap_points_g.glsl"));
 	mRenderPointsToCubeMap->uniformBlock("uMatrices", matrixBindingPoint);
 
 	// Set up the simulation data

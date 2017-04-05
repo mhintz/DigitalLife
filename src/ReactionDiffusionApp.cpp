@@ -30,7 +30,7 @@ void ReactionDiffusionApp::setup() {
 		gl::clear(Color(0, 1, 0)); // Clear to all "A"
 	}
 
-	mRDProgram = gl::GlslProg::create(ci::app::loadAsset("reactionDiffusion_v.glsl"), ci::app::loadAsset("reactionDiffusion_f.glsl"), ci::app::loadAsset("reactionDiffusion_g.glsl"));
+	mRDProgram = gl::GlslProg::create(ci::app::loadAsset("RDRunReactionDiffusion_v.glsl"), ci::app::loadAsset("RDRunReactionDiffusion_f.glsl"), ci::app::loadAsset("RDRunReactionDiffusion_g.glsl"));
 	mRDProgram->uniform("gridSideLength", mCubeMapSide);
 	mRDProgram->uniform("uPrevFrame", mRDReadFboBinding);
 	// mRDProgram->uniform("feedRateA", mTypeEpsilon_microbes[0]);
@@ -46,7 +46,7 @@ void ReactionDiffusionApp::setup() {
 		mPointMesh = gl::VboMesh::create(1, GL_POINTS, { { pointVboLayout, pointVbo } });
 	}
 
-	mRenderRDProgram = gl::GlslProg::create(ci::app::loadAsset("reactionDiffusionRender_v.glsl"), ci::app::loadAsset("reactionDiffusionRender_f.glsl"), ci::app::loadAsset("reactionDiffusionRender_g.glsl"));
+	mRenderRDProgram = gl::GlslProg::create(ci::app::loadAsset("RDRenderReactionDiffusion_v.glsl"), ci::app::loadAsset("RDRenderReactionDiffusion_f.glsl"), ci::app::loadAsset("RDRenderReactionDiffusion_g.glsl"));
 	mRenderRDProgram->uniform("uGridSampler", mRDRenderTextureBinding);
 
 	mCubeMapFacesMesh = makeCubeMapFaceMesh();

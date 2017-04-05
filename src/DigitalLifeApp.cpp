@@ -60,7 +60,7 @@ void DigitalLifeApp::setup() {
 	mOutputFbo = gl::Fbo::create(6 * OUTPUT_CUBE_MAP_SIDE, OUTPUT_CUBE_MAP_SIDE);
 
 	auto outputMesh = makeCubeMapToRowLayoutMesh(OUTPUT_CUBE_MAP_SIDE);
-	auto outputShader = gl::GlslProg::create(loadAsset("drawCubeMapToRect_v.glsl"), loadAsset("drawCubeMapToRect_f.glsl"));
+	auto outputShader = gl::GlslProg::create(loadAsset("DLOutputCubeMapToRect_v.glsl"), loadAsset("DLOutputCubeMapToRect_f.glsl"));
 	outputShader->uniform("uCubeMap", mAppTextureBind);
 
 	mOutputBatch = gl::Batch::create(outputMesh, outputShader);
@@ -70,7 +70,7 @@ void DigitalLifeApp::setup() {
 
 	mCamera.lookAt(vec3(0, 0, 4), vec3(0), vec3(0, 1, 0));
 	mCameraUi = CameraUi(& mCamera, getWindow());
-	mRenderTexAsSphereShader = gl::GlslProg::create(loadAsset("renderOutputTexAsSphere_v.glsl"), loadAsset("renderOutputTexAsSphere_f.glsl"));
+	mRenderTexAsSphereShader = gl::GlslProg::create(loadAsset("DLRenderOutputTexAsSphere_v.glsl"), loadAsset("DLRenderOutputTexAsSphere_f.glsl"));
 
 	mReactionDiffusionApp.setup();
 	mFlockingApp.setup();
