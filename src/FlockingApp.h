@@ -16,11 +16,10 @@ public:
 	void update();
 	ci::gl::TextureCubeMapRef draw();
 
-	float mBirdSize = 3.0f;
 	float mMaxSpeed = 2.0f;
 	float mMaxForce = 0.03f;
 
-	ci::ivec2 mRenderFboSize = ci::ivec2(2000, 1000);
+	ci::ivec2 mRenderFboSize = ci::ivec2(4000, 2000);
 
 //	int mNumBirds = 8192;
 	int mNumBirds = 64 * 64; // 4096

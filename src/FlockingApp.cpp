@@ -21,9 +21,9 @@ void FlockingApp::setup() {
 	while (posIter.line()) {
 		while (posIter.pixel()) {
 			// random position on the screen
-			vec2 pos(randFloat((float) mRenderFboSize.x), randFloat((float) mRenderFboSize.y));
-			posIter.r() = pos.x;
-			posIter.g() = pos.y;
+			posIter.r() = randFloat((float) mRenderFboSize.x);
+			posIter.g() = randFloat((float) mRenderFboSize.y);
+			posIter.b() = randFloat(glm::two_pi<float>());
 			// Note: the z and w coordinates don't matter at the moment - they're never used by the shader
 		}
 	}
@@ -77,7 +77,6 @@ void FlockingApp::setup() {
 
 	// Initialize the birds render routine
 	mBirdRenderProg = gl::GlslProg::create(app::loadAsset("FLRenderBirds_v.glsl"), app::loadAsset("FLRenderBirds_f.glsl"), app::loadAsset("FLRenderBirds_g.glsl"));
-	mBirdRenderProg->uniform("uBirdSize", mBirdSize);
 	mBirdRenderProg->uniform("uBirdPositions", mPosTextureBind);
 	mBirdRenderProg->uniform("uBirdVelocities", mVelTextureBind);
 	mBirdRenderBatch = gl::Batch::create(mBirdIndexMesh, mBirdRenderProg, { {geom::CUSTOM_0, "birdIndex"} });

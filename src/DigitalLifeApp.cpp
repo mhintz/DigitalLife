@@ -18,7 +18,8 @@ using namespace ci;
 using namespace ci::app;
 using std::vector;
 
-uint32_t OUTPUT_CUBE_MAP_SIDE = 512;
+// uint32_t OUTPUT_CUBE_MAP_SIDE = 512;
+uint32_t OUTPUT_CUBE_MAP_SIDE = 1024;
 
 enum class AppType {
 	REACTION_DIFFUSION,
