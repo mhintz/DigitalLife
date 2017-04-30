@@ -5,6 +5,7 @@
 #include "cinder/gl/gl.h"
 #include "cinder/Camera.h"
 #include "cinder/CameraUi.h"
+#include "cinder/ObjLoader.h"
 
 #include "Syphon.h"
 
@@ -24,7 +25,8 @@ uint32_t OUTPUT_CUBE_MAP_SIDE = 1024;
 enum class AppType {
 	REACTION_DIFFUSION,
 	FLOCKING,
-	NETWORK
+	NETWORK,
+	CUBE_DEBUG
 };
 
 class DigitalLifeApp : public App {
@@ -48,6 +50,11 @@ class DigitalLifeApp : public App {
 	CameraUi mCameraUi;
 	gl::GlslProgRef mRenderTexAsSphereShader;
 
+	gl::BatchRef mSparckConfigCube;
+	FboCubeMapLayeredRef mSparckConfigDrawFbo;
+	gl::UboRef mSparckConfigDrawMatrices;
+	gl::TextureCubeMapRef drawDebugCube();
+
 	ReactionDiffusionApp mReactionDiffusionApp;
 	FlockingApp mFlockingApp;
 	NetworkApp mNetworkApp;
@@ -60,7 +67,7 @@ void DigitalLifeApp::prepareSettings(Settings * settings) {
 void DigitalLifeApp::setup() {
 	mOutputFbo = gl::Fbo::create(6 * OUTPUT_CUBE_MAP_SIDE, OUTPUT_CUBE_MAP_SIDE);
 
-	auto outputMesh = makeCubeMapToRowLayoutMesh(OUTPUT_CUBE_MAP_SIDE);
+	auto outputMesh = makeCubeMapToRowLayoutMesh_SPARCK(OUTPUT_CUBE_MAP_SIDE);
 	auto outputShader = gl::GlslProg::create(loadAsset("DLOutputCubeMapToRect_v.glsl"), loadAsset("DLOutputCubeMapToRect_f.glsl"));
 	outputShader->uniform("uCubeMap", mAppTextureBind);
 
@@ -72,6 +79,14 @@ void DigitalLifeApp::setup() {
 	mCamera.lookAt(vec3(0, 0, 4), vec3(0), vec3(0, 1, 0));
 	mCameraUi = CameraUi(& mCamera, getWindow());
 	mRenderTexAsSphereShader = gl::GlslProg::create(loadAsset("DLRenderOutputTexAsSphere_v.glsl"), loadAsset("DLRenderOutputTexAsSphere_f.glsl"));
+
+	auto cubeObj = ObjLoader(loadAsset("BoxSides.obj"));
+	auto cubeShader = gl::GlslProg::create(loadAsset("DLRenderIntoCubeMap_v.glsl"), loadAsset("DLRenderIntoCubeMap_f.glsl"), loadAsset("DLRenderIntoCubeMap_triangles_g.glsl"));
+	mSparckConfigCube = gl::Batch::create(cubeObj, cubeShader);
+	mSparckConfigDrawFbo = FboCubeMapLayered::create(OUTPUT_CUBE_MAP_SIDE, OUTPUT_CUBE_MAP_SIDE);
+	mSparckConfigDrawMatrices = mSparckConfigDrawFbo->generateCameraMatrixBuffer();
+	mSparckConfigDrawMatrices->bindBufferBase(1);
+	cubeShader->uniformBlock("uMatrices", 1);
 
 	mReactionDiffusionApp.setup();
 	mFlockingApp.setup();
@@ -87,6 +102,8 @@ void DigitalLifeApp::keyDown(KeyEvent evt) {
 		mActiveAppType = AppType::FLOCKING;
 	} else if (evt.getCode() == KeyEvent::KEY_3) {
 		mActiveAppType = AppType::NETWORK;
+	} else if (evt.getCode() == KeyEvent::KEY_4) {
+		mActiveAppType = AppType::CUBE_DEBUG;
 	}
 }
 
@@ -95,7 +112,24 @@ void DigitalLifeApp::update() {
 		case AppType::REACTION_DIFFUSION: mReactionDiffusionApp.update();break;
 		case AppType::FLOCKING: mFlockingApp.update();break;
 		case AppType::NETWORK: mNetworkApp.update(); break;
+		case AppType::CUBE_DEBUG: break;
 	}
+}
+
+gl::TextureCubeMapRef DigitalLifeApp::drawDebugCube() {
+	gl::ScopedViewport scpView(0, 0, mSparckConfigDrawFbo->getWidth(), mSparckConfigDrawFbo->getHeight());
+
+	gl::ScopedMatrices scpMat;
+
+	gl::ScopedFramebuffer scpFbo(GL_FRAMEBUFFER, mSparckConfigDrawFbo->getId());
+
+	gl::clear(Color(0, 0, 0));
+
+	gl::ScopedColor scpColor(Color(0, 0, 0));
+
+	mSparckConfigCube->draw();
+
+	return mSparckConfigDrawFbo->getColorTex();
 }
 
 void DigitalLifeApp::draw() {
@@ -104,6 +138,7 @@ void DigitalLifeApp::draw() {
 		case AppType::REACTION_DIFFUSION: appInstanceCubeMapFrame = mReactionDiffusionApp.draw(); break;
 		case AppType::FLOCKING: appInstanceCubeMapFrame = mFlockingApp.draw(); break;
 		case AppType::NETWORK: appInstanceCubeMapFrame = mNetworkApp.draw(); break;
+		case AppType::CUBE_DEBUG: appInstanceCubeMapFrame = drawDebugCube(); break;
 	}
 
 	// Draw the cubemap to the wide FBO
