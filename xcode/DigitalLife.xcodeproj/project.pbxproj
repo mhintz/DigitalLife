@@ -21,7 +21,7 @@
 		187964A5AE854A3A8AC22814 /* DigitalLifeApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 98984B151EE6400C84D3E77F /* DigitalLifeApp.cpp */; };
 		1DBC495F20B7414DAA216441 /* FboCubeMapLayered.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A81939826F9A4B6599D25ED6 /* FboCubeMapLayered.cpp */; };
 		5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
-		7C6D0A6DDBC04D089AF2ABE6 /* Syphon.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 54EAD22F0F5644ED9C5D4096 /* Syphon.framework */; };
+		7C6D0A6DDBC04D089AF2ABE6 /* Syphon.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 54EAD22F0F5644ED9C5D4096 /* Syphon.framework */; };
 		7C742F433B4A42AFB4C1E663 /* SyphonNameboundClient.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8A837792CD4C50BCCF1BE3 /* SyphonNameboundClient.m */; };
 		8299D319089E44F8B0BF893F /* DoubleFbo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 224EC9BB7C0F4034A7017470 /* DoubleFbo.cpp */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -42,14 +42,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		8624196A335D47F18194BE48 /* CopyFiles */ = {
+		8624196A335D47F18194BE48 /* Copy Files */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				7C6D0A6DDBC04D089AF2ABE6 /* Syphon.framework in CopyFiles */,
+				7C6D0A6DDBC04D089AF2ABE6 /* Syphon.framework in Copy Files */,
 			);
+			name = "Copy Files";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -323,7 +324,7 @@
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
-				8624196A335D47F18194BE48 /* CopyFiles */,
+				8624196A335D47F18194BE48 /* Copy Files */,
 			);
 			buildRules = (
 			);
