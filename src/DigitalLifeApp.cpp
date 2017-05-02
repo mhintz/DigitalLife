@@ -62,6 +62,8 @@ class DigitalLifeApp : public App {
 
 void DigitalLifeApp::prepareSettings(Settings * settings) {
 	settings->setTitle("Digital Life");
+	settings->setHighDensityDisplayEnabled();
+	settings->setFullScreen();
 }
 
 void DigitalLifeApp::setup() {
@@ -76,7 +78,7 @@ void DigitalLifeApp::setup() {
 	mSyphonServer = ciSyphon::Server::create();
 	mSyphonServer->setName("DigitalLifeServer");
 
-	mCamera.lookAt(vec3(0, 0, 4), vec3(0), vec3(0, 1, 0));
+	mCamera.lookAt(vec3(0, 0, 3.5), vec3(0), vec3(0, 1, 0));
 	mCameraUi = CameraUi(& mCamera, getWindow());
 	mRenderTexAsSphereShader = gl::GlslProg::create(loadAsset("DLRenderOutputTexAsSphere_v.glsl"), loadAsset("DLRenderOutputTexAsSphere_f.glsl"));
 
@@ -156,29 +158,30 @@ void DigitalLifeApp::draw() {
 		mOutputBatch->draw();
 	}
 
-	gl::clear();
-
 	// Debug zone
 	{
-		// {
-		// 	gl::ScopedDepth scpDepth(true);
-		// 	gl::ScopedFaceCulling scpCull(true, GL_BACK);
+//		gl::clear();
+		gl::clear(Color8u(0, 0, 38));
 
-		// 	gl::ScopedMatrices scpMat;
-		// 	gl::setMatrices(mCamera);
+		{
+			gl::ScopedDepth scpDepth(true);
+			gl::ScopedFaceCulling scpCull(true, GL_BACK);
 
-		// 	gl::ScopedTextureBind scpTex(appInstanceCubeMapFrame);
-		// 	gl::ScopedGlslProg scpShader(mRenderTexAsSphereShader);
+			gl::ScopedMatrices scpMat;
+			gl::setMatrices(mCamera);
 
-		// 	gl::draw(geom::Sphere().center(vec3(0)).radius(1.0f).subdivisions(50));
-		// }
+			gl::ScopedTextureBind scpTex(appInstanceCubeMapFrame);
+			gl::ScopedGlslProg scpShader(mRenderTexAsSphereShader);
+
+			gl::draw(geom::Sphere().center(vec3(0)).radius(1.0f).subdivisions(50));
+		}
 
 		// gl::drawEquirectangular(appInstanceCubeMapFrame, Rectf(0, 0, getWindowWidth(), getWindowHeight()));
-		gl::drawHorizontalCross(appInstanceCubeMapFrame, Rectf(0, 0, getWindowWidth(), getWindowHeight()));
+		// gl::drawHorizontalCross(appInstanceCubeMapFrame, Rectf(0, 0, getWindowWidth(), getWindowHeight()));
 
 		// gl::draw(mOutputFbo->getColorTexture(), Rectf(0, 0, getWindowWidth(), getWindowHeight() / 3));
 
-		gl::drawString(std::to_string(getAverageFps()), vec2(10.0f, 20.0f), ColorA(1.0f, 1.0f, 1.0f, 1.0f));
+		// gl::drawString(std::to_string(getAverageFps()), vec2(10.0f, 20.0f), ColorA(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 
 	// Publish to Syphon
