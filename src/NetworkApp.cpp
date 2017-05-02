@@ -46,11 +46,16 @@ void NetworkApp::setup()
 			float d2 = distance(node.mPos, p2->mPos);
 			return d1 < d2;
 		});
-		// Take the nearest six (knowing the the first one will be the node itself)
-		for (int i = 1; i <= 6; i++) {
-			node.mLinks.insert(nodePointers[i]->mId);
-			nodePointers[i]->mLinks.insert(node.mId);
-			mNetworkLinks.push_back(std::make_pair(nodePointers[i]->mId, node.mId));
+		// Take the nearest six which don't already have six links
+		// (knowing the the first one will be the node itself)
+		for (int i = 1; i < nodePointers.size(); i++) {
+			if (node.mLinks.size() >= mNumLinksPerNode) { break; }
+
+			if (nodePointers[i]->mLinks.size() < mNumLinksPerNode) {
+				node.mLinks.insert(nodePointers[i]->mId);
+				nodePointers[i]->mLinks.insert(node.mId);
+				mNetworkLinks.push_back(std::make_pair(nodePointers[i]->mId, node.mId));
+			}
 		}
 	}
 
@@ -101,17 +106,17 @@ void NetworkApp::update()
 	for (int idx = 0; idx < mNetworkNodes.size(); idx++) {
 		auto & node = mNetworkNodes[idx];
 		if (node.mInfected) {
-			if (randFloat() < 0.04) { willBeInfected[node.mId] = false; } else { willBeInfected[node.mId] = true; }
+			if (randFloat() < mNodeDisinfectChance) { willBeInfected[node.mId] = false; } else { willBeInfected[node.mId] = true; }
 			for (uint otherId : node.mLinks) {
-				if (randFloat() < 0.01) { willBeInfected[otherId] = true; }
+				if (randFloat() < mSpreadInfectionChance) { willBeInfected[otherId] = true; }
 			}
 		}
 	}
 
 	uint numInfected = std::accumulate(willBeInfected.begin(), willBeInfected.end(), 0, [] (uint count, bool inf) { return count + (inf ? 1 : 0); });
-	if (numInfected < 10) {
+	if (numInfected < mMinInfected) {
 		for (auto & node : mNetworkNodes) {
-			if (randFloat() < 10.f / mNumNetworkNodes) { node.mInfected = true; }
+			if (randFloat() < (float) mMinInfected / mNumNetworkNodes) { willBeInfected[node.mId] = true; }
 		}
 	}
 
