@@ -1,0 +1,14 @@
+{
+  "name": "gen_cfig",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gen_cfig_obj.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mark Hintz <mark@interactivethings.com> (http://www.markhz.com)",
+  "license": "ISC",
+  "dependencies": {
+    "serialize-wavefront-obj": "^1.0.0"
+  }
+}
