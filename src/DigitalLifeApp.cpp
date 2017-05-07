@@ -127,7 +127,7 @@ gl::TextureCubeMapRef DigitalLifeApp::drawDebugCube() {
 
 	gl::clear(Color(0, 0, 0));
 
-	gl::ScopedColor scpColor(Color(0, 0, 0));
+	gl::ScopedColor scpColor(Color(1, 1, 1));
 
 	mSparckConfigCube->draw();
 
