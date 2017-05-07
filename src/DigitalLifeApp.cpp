@@ -82,8 +82,12 @@ void DigitalLifeApp::setup() {
 	mRenderTexAsSphereShader = gl::GlslProg::create(loadAsset("DLRenderOutputTexAsSphere_v.glsl"), loadAsset("DLRenderOutputTexAsSphere_f.glsl"));
 
 	auto cubeObj = ObjLoader(loadAsset("BoxSides.obj"));
+    auto cubeVboMesh = gl::VboMesh::create(cubeObj, {
+        {gl::VboMesh::Layout().attrib(geom::Attrib::POSITION, 3), nullptr},
+        {gl::VboMesh::Layout().attrib(geom::Attrib::TEX_COORD_0, 2), nullptr}
+    });
 	auto cubeShader = gl::GlslProg::create(loadAsset("DLRenderIntoCubeMap_v.glsl"), loadAsset("DLRenderIntoCubeMap_f.glsl"), loadAsset("DLRenderIntoCubeMap_triangles_g.glsl"));
-	mSparckConfigCube = gl::Batch::create(cubeObj, cubeShader);
+	mSparckConfigCube = gl::Batch::create(cubeVboMesh, cubeShader);
 	mSparckConfigDrawFbo = FboCubeMapLayered::create(OUTPUT_CUBE_MAP_SIDE, OUTPUT_CUBE_MAP_SIDE);
 	mSparckConfigDrawMatrices = mSparckConfigDrawFbo->generateCameraMatrixBuffer();
 	mSparckConfigDrawMatrices->bindBufferBase(1);
