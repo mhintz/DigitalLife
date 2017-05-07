@@ -94,4 +94,4 @@ for (var i = 1; i < SEGMENTS; i++) {
 
 add_face(m, [last_v(m), last_v(m) - SEGMENTS, last_v(m) - 1])
 
-fs.writeFileSync('test_cfig_obj.obj', serializeOBJ(m.cells, m.positions));
+fs.writeFileSync('installation_custom_adjusted_projector_sphere_cfig.obj', serializeOBJ(m.cells, m.positions));
