@@ -63,7 +63,6 @@ class DigitalLifeApp : public App {
 void DigitalLifeApp::prepareSettings(Settings * settings) {
 	settings->setTitle("Digital Life");
 	settings->setHighDensityDisplayEnabled();
-	settings->setFullScreen();
 }
 
 void DigitalLifeApp::setup() {
@@ -83,8 +82,12 @@ void DigitalLifeApp::setup() {
 	mRenderTexAsSphereShader = gl::GlslProg::create(loadAsset("DLRenderOutputTexAsSphere_v.glsl"), loadAsset("DLRenderOutputTexAsSphere_f.glsl"));
 
 	auto cubeObj = ObjLoader(loadAsset("BoxSides.obj"));
+    auto cubeVboMesh = gl::VboMesh::create(cubeObj, {
+        {gl::VboMesh::Layout().attrib(geom::Attrib::POSITION, 3), nullptr},
+        {gl::VboMesh::Layout().attrib(geom::Attrib::TEX_COORD_0, 2), nullptr}
+    });
 	auto cubeShader = gl::GlslProg::create(loadAsset("DLRenderIntoCubeMap_v.glsl"), loadAsset("DLRenderIntoCubeMap_f.glsl"), loadAsset("DLRenderIntoCubeMap_triangles_g.glsl"));
-	mSparckConfigCube = gl::Batch::create(cubeObj, cubeShader);
+	mSparckConfigCube = gl::Batch::create(cubeVboMesh, cubeShader);
 	mSparckConfigDrawFbo = FboCubeMapLayered::create(OUTPUT_CUBE_MAP_SIDE, OUTPUT_CUBE_MAP_SIDE);
 	mSparckConfigDrawMatrices = mSparckConfigDrawFbo->generateCameraMatrixBuffer();
 	mSparckConfigDrawMatrices->bindBufferBase(1);
@@ -127,7 +130,7 @@ gl::TextureCubeMapRef DigitalLifeApp::drawDebugCube() {
 
 	gl::clear(Color(0, 0, 0));
 
-	gl::ScopedColor scpColor(Color(0, 0, 0));
+	gl::ScopedColor scpColor(Color(1, 1, 1));
 
 	mSparckConfigCube->draw();
 
@@ -160,10 +163,9 @@ void DigitalLifeApp::draw() {
 
 	// Debug zone
 	{
-//		gl::clear();
-		gl::clear(Color8u(0, 0, 38));
-
 		{
+			gl::clear(Color8u(0, 0, 38));
+
 			gl::ScopedDepth scpDepth(true);
 			gl::ScopedFaceCulling scpCull(true, GL_BACK);
 
@@ -176,10 +178,14 @@ void DigitalLifeApp::draw() {
 			gl::draw(geom::Sphere().center(vec3(0)).radius(1.0f).subdivisions(50));
 		}
 
-		// gl::drawEquirectangular(appInstanceCubeMapFrame, Rectf(0, 0, getWindowWidth(), getWindowHeight()));
-		// gl::drawHorizontalCross(appInstanceCubeMapFrame, Rectf(0, 0, getWindowWidth(), getWindowHeight()));
+		{
+			// gl::clear();
 
-		// gl::draw(mOutputFbo->getColorTexture(), Rectf(0, 0, getWindowWidth(), getWindowHeight() / 3));
+			// gl::drawEquirectangular(appInstanceCubeMapFrame, Rectf(0, 0, getWindowWidth(), getWindowHeight()));
+			// gl::drawHorizontalCross(appInstanceCubeMapFrame, Rectf(0, 0, getWindowWidth(), getWindowHeight()));
+
+			// gl::draw(mOutputFbo->getColorTexture(), Rectf(0, 0, getWindowWidth(), getWindowHeight() / 3));
+		}
 
 		// gl::drawString(std::to_string(getAverageFps()), vec2(10.0f, 20.0f), ColorA(1.0f, 1.0f, 1.0f, 1.0f));
 	}

@@ -113,6 +113,7 @@ void FlockingApp::update()
 		gl::ScopedTextureBind scpVelTex(mVelocitiesSource->getColorTexture(), mVelTextureBind);
 
 		gl::ScopedFramebuffer scpFbo(mVelocitiesDest);
+		gl::clear();
 		gl::drawSolidRect(Rectf(0, 0, mFboSide, mFboSide));
 	}
 
@@ -123,6 +124,7 @@ void FlockingApp::update()
 		gl::ScopedTextureBind scpVelTex(mVelocitiesSource->getColorTexture(), mVelTextureBind);
 
 		gl::ScopedFramebuffer scpFbo(mPositionsDest);
+		gl::clear();
 		gl::drawSolidRect(Rectf(0, 0, mFboSide, mFboSide));
 	}
 
