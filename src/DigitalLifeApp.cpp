@@ -159,10 +159,9 @@ void DigitalLifeApp::draw() {
 
 	// Debug zone
 	{
-//		gl::clear();
-		gl::clear(Color8u(0, 0, 38));
-
 		{
+			gl::clear(Color8u(0, 0, 38));
+
 			gl::ScopedDepth scpDepth(true);
 			gl::ScopedFaceCulling scpCull(true, GL_BACK);
 
@@ -175,10 +174,14 @@ void DigitalLifeApp::draw() {
 			gl::draw(geom::Sphere().center(vec3(0)).radius(1.0f).subdivisions(50));
 		}
 
-		// gl::drawEquirectangular(appInstanceCubeMapFrame, Rectf(0, 0, getWindowWidth(), getWindowHeight()));
-		// gl::drawHorizontalCross(appInstanceCubeMapFrame, Rectf(0, 0, getWindowWidth(), getWindowHeight()));
+		{
+			// gl::clear();
 
-		// gl::draw(mOutputFbo->getColorTexture(), Rectf(0, 0, getWindowWidth(), getWindowHeight() / 3));
+			// gl::drawEquirectangular(appInstanceCubeMapFrame, Rectf(0, 0, getWindowWidth(), getWindowHeight()));
+			// gl::drawHorizontalCross(appInstanceCubeMapFrame, Rectf(0, 0, getWindowWidth(), getWindowHeight()));
+
+			// gl::draw(mOutputFbo->getColorTexture(), Rectf(0, 0, getWindowWidth(), getWindowHeight() / 3));
+		}
 
 		// gl::drawString(std::to_string(getAverageFps()), vec2(10.0f, 20.0f), ColorA(1.0f, 1.0f, 1.0f, 1.0f));
 	}
