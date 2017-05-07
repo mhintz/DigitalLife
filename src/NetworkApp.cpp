@@ -144,32 +144,30 @@ void NetworkApp::update()
 
 gl::TextureCubeMapRef NetworkApp::draw()
 {
-	gl::clear(Color(0, 0, 0));
+	gl::ScopedFramebuffer scpFbo(GL_FRAMEBUFFER, mOutputCubeFbo->getId());
 
 	gl::ScopedDepth scpDepth(true);
+
+	gl::ScopedViewport scpView(0, 0, mOutputCubeFbo->getWidth(), mOutputCubeFbo->getHeight());
+	gl::ScopedMatrices scpMat;
+
 	gl::pointSize(5.0);
 
+	gl::clear(Color(0, 0, 0));
+
 	{
-		gl::ScopedViewport scpView(0, 0, mOutputCubeFbo->getWidth(), mOutputCubeFbo->getHeight());
+		gl::ScopedGlslProg scpShader(mRenderLinesToCubeMap);
 
-		gl::ScopedMatrices scpMat;
-
-		gl::ScopedFramebuffer scpFbo(GL_FRAMEBUFFER, mOutputCubeFbo->getId());
-
-		gl::clear(Color(0, 0, 0));
-
-		{
-			gl::ScopedGlslProg scpShader(mRenderLinesToCubeMap);
-
-			gl::draw(mLinksMesh);
-		}
-
-		{
-			gl::ScopedGlslProg scpShader(mRenderPointsToCubeMap);
-
-			gl::draw(mNodesMesh);
-		}
+		gl::draw(mLinksMesh);
 	}
+
+	{
+		gl::ScopedGlslProg scpShader(mRenderPointsToCubeMap);
+
+		gl::draw(mNodesMesh);
+	}
+
+	gl::pointSize(1.0);
 
 	return mOutputCubeFbo->getColorTex();
 }
