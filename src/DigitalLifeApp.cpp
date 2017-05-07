@@ -63,7 +63,6 @@ class DigitalLifeApp : public App {
 void DigitalLifeApp::prepareSettings(Settings * settings) {
 	settings->setTitle("Digital Life");
 	settings->setHighDensityDisplayEnabled();
-	settings->setFullScreen();
 }
 
 void DigitalLifeApp::setup() {
