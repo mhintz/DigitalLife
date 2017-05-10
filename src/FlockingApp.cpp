@@ -21,9 +21,11 @@ void FlockingApp::setup() {
 	while (posIter.line()) {
 		while (posIter.pixel()) {
 			// random position on the screen
-			posIter.r() = randFloat((float) mRenderFboSize.x);
-			posIter.g() = randFloat((float) mRenderFboSize.y);
-			posIter.b() = randFloat(glm::two_pi<float>());
+			vec3 pos = randVec3();
+			posIter.r() = pos.x;
+			posIter.g() = pos.y;
+			posIter.b() = pos.z;
+			posIter.a() = randFloat(glm::two_pi<float>()); // random initial wing position
 			// Note: the z and w coordinates don't matter at the moment - they're never used by the shader
 		}
 	}
@@ -39,10 +41,14 @@ void FlockingApp::setup() {
 	while (velIter.line()) {
 		while (velIter.pixel()) {
 			// random velocity direction
-			vec2 vel = randVec2();
+			vec3 vel = randVec3();
+			ColorA posC = initialPos.getPixel(velIter.getPos());
+			vec3 pos = vec3(posC.r, posC.g, posC.b);
+			// Projects the velocity to a plane tangent to the unit sphere
+			vel = 0.001f * glm::normalize(vel - glm::dot(vel, pos) * pos);
 			velIter.r() = vel.x;
 			velIter.g() = vel.y;
-			// Note: the z and w coordinates don't matter at the moment - they're never used by the shader
+			velIter.b() = vel.z;
 		}
 	}
 	auto velTex = gl::Texture2d::create(initialVel, fboTexFmt);
@@ -54,8 +60,6 @@ void FlockingApp::setup() {
 	// Initialize the birds update routine
 	mBirdPosUpdateProg = gl::GlslProg::create(app::loadAsset("FLRunBirds_v.glsl"), app::loadAsset("FLRunBirdsPosition_f.glsl"));
 	mBirdPosUpdateProg->uniform("uGridSide", mFboSide);
-	mBirdPosUpdateProg->uniform("uScreenWidth", mRenderFboSize.x);
-	mBirdPosUpdateProg->uniform("uScreenHeight", mRenderFboSize.y);
 	mBirdPosUpdateProg->uniform("uPositions", mPosTextureBind);
 	mBirdPosUpdateProg->uniform("uVelocities", mVelTextureBind);
 
@@ -81,10 +85,6 @@ void FlockingApp::setup() {
 	mBirdRenderProg->uniform("uBirdVelocities", mVelTextureBind);
 	mBirdRenderBatch = gl::Batch::create(mBirdIndexMesh, mBirdRenderProg, { {geom::CUSTOM_0, "birdIndex"} });
 
-	mBirdRenderFbo = gl::Fbo::create(mRenderFboSize.x, mRenderFboSize.y);
-
-	mSphereMesh = gl::VboMesh::create(geom::Sphere().colors().center(vec3(0)).radius(1.0f).subdivisions(50));
-
 	// Set up the cube map 360 degree camera
 	auto cubeMapFormat = gl::TextureCubeMap::Format()
 		.magFilter(GL_LINEAR)
@@ -97,11 +97,37 @@ void FlockingApp::setup() {
 
 	mCubeMapCameraMatrixBuffer = mCubeMapCamera->generateCameraMatrixBuffer();
 
-	mTrianglesCubeMapCameraProgram = gl::GlslProg::create(app::loadAsset("DLRenderIntoCubeMap_v.glsl"), app::loadAsset("FLRenderBirdsToSphere_f.glsl"), app::loadAsset("DLRenderIntoCubeMap_triangles_g.glsl"));
+	// Set up params
+	mMenu = params::InterfaceGl::create(app::getWindow(), "Menu", app::toPixels(ivec2(200, 500)));
+	mMenu->addParam<float>("Min Speed", & mMinSpeed).min(0.0f).max(1.0f).precision(4).step(0.0001f);
+	mMenu->addParam<float>("Max Speed", & mMaxSpeed).min(0.0f).max(1.0f).precision(4).step(0.0001f);
+	mMenu->addParam<float>("Min Force", & mMinForce).min(0.0f).max(1.0f).precision(4).step(0.0001f);
+	mMenu->addParam<float>("Max Force", & mMaxForce).min(0.0f).max(1.0f).precision(4).step(0.0001f);
+	mMenu->addParam<float>("Separation Dist", & mSeparationDist).min(0.0f).max(1.0f).precision(4).step(0.0001f);
+	mMenu->addParam<float>("Separation Mod", & mSeparationMod).min(0.0f).max(1.0f).precision(4).step(0.0001f);
+	mMenu->addParam<float>("Align Dist", & mAlignDist).min(0.0f).max(1.0f).precision(4).step(0.0001f);
+	mMenu->addParam<float>("Align Mod", & mAlignMod).min(0.0f).max(1.0f).precision(4).step(0.0001f);
+	mMenu->addParam<float>("Cohesion Dist", & mCohesionDist).min(0.0f).max(1.0f).precision(4).step(0.0001f);
+	mMenu->addParam<float>("Cohesion Mod", & mCohesionMod).min(0.0f).max(1.0f).precision(4).step(0.0001f);
 }
 
 void FlockingApp::update()
 {
+	// Update uniforms (assuming params can change any time)
+	mBirdVelUpdateProg->uniform("uMinSpeed", mMinSpeed);
+	mBirdVelUpdateProg->uniform("uMaxSpeed", mMaxSpeed);
+
+	mBirdVelUpdateProg->uniform("uMinForce", mMinForce);
+	mBirdVelUpdateProg->uniform("uMaxForce", mMaxForce);
+	
+	mBirdVelUpdateProg->uniform("uSeparationDist", mSeparationDist);
+	mBirdVelUpdateProg->uniform("uSeparationMod", mSeparationMod);
+	mBirdVelUpdateProg->uniform("uAlignDist", mAlignDist);
+	mBirdVelUpdateProg->uniform("uAlignMod", mAlignMod);
+	mBirdVelUpdateProg->uniform("uCohesionDist", mCohesionDist);
+	mBirdVelUpdateProg->uniform("uCohesionMod", mCohesionMod);
+
+	// Run the simulation itself
 	gl::ScopedViewport scpView(0, 0, mFboSide, mFboSide);
 	gl::ScopedMatrices scpMat;
 	gl::setMatricesWindow(mFboSide, mFboSide);
@@ -134,25 +160,7 @@ void FlockingApp::update()
 
 gl::TextureCubeMapRef FlockingApp::draw()
 {
-	// Draw the birds into the flat FBO
-	{
-		gl::ScopedFramebuffer scpFbo(mBirdRenderFbo);
-
-		gl::ScopedMatrices scpMat;
-		gl::setMatricesWindow(mRenderFboSize.x, mRenderFboSize.y);
-		gl::ScopedViewport scpView(0, 0, mRenderFboSize.x, mRenderFboSize.y);
-
-		gl::clear(Color(0, 0, 0));
-
-		gl::ScopedColor scpColor(Color(1, 1, 1));
-
-		gl::ScopedTextureBind scpPosTex(mPositionsSource->getColorTexture(), mPosTextureBind);
-		gl::ScopedTextureBind scpVelTex(mVelocitiesSource->getColorTexture(), mVelTextureBind);
-
-		mBirdRenderBatch->draw();
-	}
-
-	// Draw the sphere into the 360 degree camera FBO
+	// Draw the birds into the 360 degree camera FBO
 	{
 		// Bind the 360 camera framebuffer
 		gl::ScopedFramebuffer scpFbo(GL_FRAMEBUFFER, mCubeMapCamera->getId());
@@ -162,17 +170,17 @@ gl::TextureCubeMapRef FlockingApp::draw()
 
 		gl::clear(Color(0, 0, 0));
 
+		gl::ScopedTextureBind scpPosTex(mPositionsSource->getColorTexture(), mPosTextureBind);
+		gl::ScopedTextureBind scpVelTex(mVelocitiesSource->getColorTexture(), mVelTextureBind);
+
+		gl::ScopedColor scpColor(Color(1, 1, 1));
+
 		// Shader uniforms
-		gl::ScopedGlslProg scpShader(mTrianglesCubeMapCameraProgram);
-
 		mCubeMapCameraMatrixBuffer->bindBufferBase(mCubeMapCameraMatrixBind);
-		mTrianglesCubeMapCameraProgram->uniformBlock("uMatrices", mCubeMapCameraMatrixBind);
+		mBirdRenderProg->uniformBlock("uMatrices", mCubeMapCameraMatrixBind);
 
-		gl::ScopedTextureBind scpBirdTex(mBirdRenderFbo->getColorTexture(), mRenderedBirdTextureBind);
-		mTrianglesCubeMapCameraProgram->uniform("uBirdsTex", mRenderedBirdTextureBind);
-
-		// Draw the sphere into the 360 camera
-		gl::draw(mSphereMesh);
+		// Draw the birds into the 360 camera
+		mBirdRenderBatch->draw();
 	}
 
 	// Return the 360 camera's color texture

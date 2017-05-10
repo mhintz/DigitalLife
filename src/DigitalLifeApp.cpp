@@ -63,6 +63,7 @@ class DigitalLifeApp : public App {
 void DigitalLifeApp::prepareSettings(Settings * settings) {
 	settings->setTitle("Digital Life");
 	settings->setHighDensityDisplayEnabled();
+	settings->setWindowSize(800, 650);
 }
 
 void DigitalLifeApp::setup() {
@@ -76,10 +77,6 @@ void DigitalLifeApp::setup() {
 
 	mSyphonServer = ciSyphon::Server::create();
 	mSyphonServer->setName("DigitalLifeServer");
-
-	mCamera.lookAt(vec3(0, 0, 3.5), vec3(0), vec3(0, 1, 0));
-	mCameraUi = CameraUi(& mCamera, getWindow());
-	mRenderTexAsSphereShader = gl::GlslProg::create(loadAsset("DLRenderOutputTexAsSphere_v.glsl"), loadAsset("DLRenderOutputTexAsSphere_f.glsl"));
 
 	auto cubeObj = ObjLoader(loadAsset("BoxSides.obj"));
     auto cubeVboMesh = gl::VboMesh::create(cubeObj, {
@@ -96,6 +93,10 @@ void DigitalLifeApp::setup() {
 	mReactionDiffusionApp.setup();
 	mFlockingApp.setup();
 	mNetworkApp.setup();
+
+	mCamera.lookAt(vec3(0, 0, 3.5), vec3(0), vec3(0, 1, 0));
+	mCameraUi = CameraUi(& mCamera, getWindow());
+	mRenderTexAsSphereShader = gl::GlslProg::create(loadAsset("DLRenderOutputTexAsSphere_v.glsl"), loadAsset("DLRenderOutputTexAsSphere_f.glsl"));
 }
 
 void DigitalLifeApp::keyDown(KeyEvent evt) {
@@ -176,6 +177,10 @@ void DigitalLifeApp::draw() {
 			gl::ScopedGlslProg scpShader(mRenderTexAsSphereShader);
 
 			gl::draw(geom::Sphere().center(vec3(0)).radius(1.0f).subdivisions(50));
+		}
+
+		{
+			mFlockingApp.mMenu->draw();
 		}
 
 		{

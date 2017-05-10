@@ -13,16 +13,11 @@ out vec4 FragColor;
 
 void main() {
   vec2 texIndex = gl_FragCoord.xy / vec2(uGridSide, uGridSide);
-  vec3 pos = texture(uPositions, texIndex).xyz;
-  vec2 vel = texture(uVelocities, texIndex).xy;
+  vec4 pos = texture(uPositions, texIndex);
+  vec3 vel = texture(uVelocities, texIndex).xyz;
 
-  vec2 newPos = pos.xy + vel;
+  // Make sure the position always stays normalized onto the sphere
+  vec3 newPos = normalize(pos.xyz + vel);
 
-  // Apply bounds
-  if (newPos.x < 0) { newPos.x = uScreenWidth; }
-  if (newPos.y < 0) { newPos.y = uScreenHeight; }
-  if (newPos.x > uScreenWidth) { newPos.x = 0; }
-  if (newPos.y > uScreenHeight) { newPos.y = 0; }
-
-  FragColor = vec4(newPos, pos.z + FLAP_SPEED, 1);
+  FragColor = vec4(newPos, pos.a + FLAP_SPEED);
 }

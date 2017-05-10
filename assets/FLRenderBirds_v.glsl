@@ -13,10 +13,10 @@ out VertexData {
 } vs_out;
 
 void main() {
-  vec3 position = texture(uBirdPositions, birdIndex).xyz;
-  vec2 velocity = texture(uBirdVelocities, birdIndex).xy;
-  gl_Position = vec4(position.xy, 0, 1);
-  vs_out.velocity = vec4(normalize(velocity), 0, 0);
+  vec4 position = texture(uBirdPositions, birdIndex);
+  vec3 velocity = texture(uBirdVelocities, birdIndex).xyz;
+  gl_Position = vec4(position.xyz, 1);
+  vs_out.velocity = vec4(normalize(velocity), 0);
   vs_out.color = ciColor;
-  vs_out.wingPos = position.z;
+  vs_out.wingPos = position.a;
 }
