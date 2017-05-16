@@ -19,5 +19,6 @@ void main() {
   gl_Position = vec4(position.xyz, 1);
   vs_out.velocity = vec4(normalize(velocity), 0);
   vs_out.color = texture(uColorTex, birdIndex);
+  // vs_out.color = ciColor;
   vs_out.wingPos = position.a;
 }
