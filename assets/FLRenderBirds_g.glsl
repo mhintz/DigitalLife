@@ -1,14 +1,13 @@
 #version 410
 
+#define BIRD_SIZE 0.01
+#define WING_SIZE 0.025
 #define PI 3.14159265359
-#define BIRD_SIZE 5.0
-#define WING_SIZE 15.0
 #define MAX_FLAP_ANGLE PI * 0.25
 #define FLAP_OFFSET PI * 0.12
 
 layout(points, invocations = 6) in;
-// layout(triangle_strip, max_vertices = 4) out;
-layout(triangle_strip, max_vertices = 3) out;
+layout(triangle_strip, max_vertices = 4) out;
 
 in VertexData {
   vec4 velocity;
@@ -22,44 +21,49 @@ layout(std140) uniform uMatrices {
 
 out vec4 aColor;
 
+// Thanks GLM!!! http://glm.g-truc.net/0.9.8/api/a00169.html
+mat3 rotation_matrix(vec3 inAxis, float angle) {
+  vec3 axis = normalize(inAxis);
+  float s = sin(angle);
+  float c = cos(angle);
+  vec3 temp = (1.0 - c) * axis;
+
+  return mat3(c + temp.x * axis.x,            temp.x * axis.y + s * axis.z,   temp.x * axis.z - s * axis.y,
+              temp.y * axis.x - s * axis.z,   c + temp.y * axis.y,            temp.y * axis.z + s * axis.x,
+              temp.z * axis.x + s * axis.y,   temp.z * axis.y - s * axis.x,   c + temp.z * axis.z);
+}
+
 void main() {
   gl_Layer = gl_InvocationID;
 
-  vec3 pos = gl_in[0].gl_Position.xyz;
-  vec3 vel = gs_in[0].velocity.xyz;
+  vec3 pos = normalize(gl_in[0].gl_Position.xyz);
+  vec3 vel = normalize(gs_in[0].velocity.xyz);
   vec3 backVec = -vel;
   vec3 wingR = normalize(cross(pos, vel));
-  vec3 wingL = normalize(cross(vel, pos));
+  vec3 wingL = -wingR;
   float wingAngle = sin(gs_in[0].wingPos) * MAX_FLAP_ANGLE + FLAP_OFFSET;
-  float wingAngleSin = sin(wingAngle);
-  float wingAngleCos = cos(wingAngle);
 
   // right wing
-  // Eventually this needs to be a mat3 :/
-  // mat2 angleRotationRight = mat2(wingAngleCos, wingAngleSin, -wingAngleSin, wingAngleCos);
+  mat3 angleRotationRight = rotation_matrix(pos, wingAngle);
 
-  // gl_Position = viewProjectionMatrix[gl_InvocationID] * (gl_in[0].gl_Position + toV4(WING_SIZE * (angleRotationRight * wingR)));
-  gl_Position = viewProjectionMatrix[gl_InvocationID] * vec4(pos + 0.005 * wingR, 1);
+  gl_Position = viewProjectionMatrix[gl_InvocationID] * vec4(pos + WING_SIZE * (angleRotationRight * wingR), 1);
   aColor = gs_in[0].color;
   EmitVertex();
 
-  // gl_Position = viewProjectionMatrix[gl_InvocationID] * (gl_in[0].gl_Position + toV4(BIRD_SIZE * backVec));
-  gl_Position = viewProjectionMatrix[gl_InvocationID] * vec4(pos + 0.005 * wingL, 1);
+  gl_Position = viewProjectionMatrix[gl_InvocationID] * vec4(pos + BIRD_SIZE * vel, 1);
   aColor = gs_in[0].color;
   EmitVertex();
 
-  // gl_Position = viewProjectionMatrix[gl_InvocationID] * (gl_in[0].gl_Position + toV4(BIRD_SIZE * vel));
-  gl_Position = viewProjectionMatrix[gl_InvocationID] * vec4(pos + 0.025 * vel, 1);
+  gl_Position = viewProjectionMatrix[gl_InvocationID] * vec4(pos + BIRD_SIZE * backVec, 1);
   aColor = gs_in[0].color;
   EmitVertex();
 
   // left wing
-  // Eventually this needs to be a mat3 :/
-  // mat2 angleRotationLeft = mat2(wingAngleCos, -wingAngleSin, wingAngleSin, wingAngleCos);
+  mat3 angleRotationLeft = rotation_matrix(pos, -wingAngle);
 
-  // gl_Position = viewProjectionMatrix[gl_InvocationID] * (gl_in[0].gl_Position + toV4(WING_SIZE * (angleRotationLeft * wingL)));
-  // aColor = gs_in[0].color;
-  // EmitVertex();
+  gl_Position = viewProjectionMatrix[gl_InvocationID] * vec4(pos + WING_SIZE * (angleRotationLeft * wingL), 1);
+  aColor = gs_in[0].color;
+  EmitVertex();
 
   EndPrimitive();
 }

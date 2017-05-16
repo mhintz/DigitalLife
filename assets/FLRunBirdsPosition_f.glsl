@@ -1,6 +1,7 @@
 #version 410
 
-#define FLAP_SPEED 0.32
+// #define FLAP_SPEED 0.32
+#define FLAP_SPEED 0.40
 
 uniform int uGridSide;
 uniform int uScreenWidth;

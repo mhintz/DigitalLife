@@ -9,7 +9,7 @@ void FlockingApp::setup() {
 	mNumBirds = mFboSide * mFboSide;
 
 	auto fboTexFmt = gl::Texture2d::Format()
-		.internalFormat(GL_RGB32F)
+		.internalFormat(GL_RGBA32F) // Turns out the A is important
 		.wrap(GL_REPEAT)
 		.minFilter(GL_NEAREST)
 		.magFilter(GL_NEAREST);
@@ -141,6 +141,7 @@ void FlockingApp::update()
 	mBirdVelUpdateProg->uniform("uCohesionMod", mCohesionMod);
 
 	// Run the simulation itself
+	gl::ScopedBlend scpBlend(false); // No alpha blending when running the simulation - because alpha is used for data
 	gl::ScopedViewport scpView(0, 0, mFboSide, mFboSide);
 	gl::ScopedMatrices scpMat;
 	gl::setMatricesWindow(mFboSide, mFboSide);
@@ -180,6 +181,8 @@ gl::TextureCubeMapRef FlockingApp::draw()
 
 		gl::ScopedDepth scpDepth(true);
 		gl::ScopedViewport scpView(0, 0, mCubeMapCamera->getWidth(), mCubeMapCamera->getHeight());
+
+		gl::ScopedFaceCulling scpCull(false);
 
 		gl::clear(Color(0, 0, 0));
 
