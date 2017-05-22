@@ -57,18 +57,6 @@ void FlockingApp::setup() {
 	mVelocitiesSource = gl::Fbo::create(mFboSide, mFboSide, velFboFmt);
 	mVelocitiesDest = gl::Fbo::create(mFboSide, mFboSide, fboDefaultFmt);
 
-	Surface32f colorBuf(mFboSide, mFboSide, true);
-	auto colIter = colorBuf.getIter();
-	while (colIter.line()) {
-		while (colIter.pixel()) {
-			vec3 rgbColor = abs(randVec3());
-			colIter.r() = rgbColor.x;
-			colIter.g() = rgbColor.y;
-			colIter.b() = rgbColor.z;
-		}
-	}
-	mColorTex = gl::Texture2d::create(colorBuf, fboTexFmt);
-
 	// Initialize the birds update routine
 	mBirdPosUpdateProg = gl::GlslProg::create(app::loadAsset("FLRunBirds_v.glsl"), app::loadAsset("FLRunBirdsPosition_f.glsl"));
 	mBirdPosUpdateProg->uniform("uGridSide", mFboSide);
@@ -95,7 +83,6 @@ void FlockingApp::setup() {
 	mBirdRenderProg = gl::GlslProg::create(app::loadAsset("FLRenderBirds_v.glsl"), app::loadAsset("FLRenderBirds_f.glsl"), app::loadAsset("FLRenderBirds_g.glsl"));
 	mBirdRenderProg->uniform("uBirdPositions", mPosTextureBind);
 	mBirdRenderProg->uniform("uBirdVelocities", mVelTextureBind);
-	mBirdRenderProg->uniform("uColorTex", mColorTextureBind);
 	mBirdRenderBatch = gl::Batch::create(mBirdIndexMesh, mBirdRenderProg, { {geom::CUSTOM_0, "birdIndex"} });
 
 	// Set up the cube map 360 degree camera
@@ -188,8 +175,6 @@ gl::TextureCubeMapRef FlockingApp::draw()
 
 		gl::ScopedTextureBind scpPosTex(mPositionsSource->getColorTexture(), mPosTextureBind);
 		gl::ScopedTextureBind scpVelTex(mVelocitiesSource->getColorTexture(), mVelTextureBind);
-
-		gl::ScopedTextureBind scpColorTex(mColorTex, mColorTextureBind);
 
 		gl::ScopedColor scpColor(Color(1, 1, 1));
 

@@ -37,14 +37,11 @@ public:
 	uint8_t mPosTextureBind = 0;
 	uint8_t mVelTextureBind = 1;
 	uint8_t mCubeMapCameraMatrixBind = 2;
-	uint8_t mColorTextureBind = 3;
 
 	ci::gl::FboRef mPositionsSource;
 	ci::gl::FboRef mPositionsDest;
 	ci::gl::FboRef mVelocitiesSource;
 	ci::gl::FboRef mVelocitiesDest;
-
-	ci::gl::Texture2dRef mColorTex;
 
 	ci::gl::GlslProgRef mBirdPosUpdateProg;
 	ci::gl::GlslProgRef mBirdVelUpdateProg;
