@@ -23,6 +23,7 @@ public:
 	void setup();
 	void update();
 	gl::TextureCubeMapRef draw();
+	void disrupt(ci::vec3 dir);
 
 	void setupCircleRD(float rad);
 
