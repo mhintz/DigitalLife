@@ -46,6 +46,8 @@ void ReactionDiffusionApp::setup() {
 		mPointMesh = gl::VboMesh::create(1, GL_POINTS, { { pointVboLayout, pointVbo } });
 	}
 
+	mDisruptShader = gl::GlslProg::create(ci::app::loadAsset("RDRunReactionDiffusion_v.glsl"), ci::app::loadAsset("RDDisruptReactionDiffusion_f.glsl"), ci::app::loadAsset("RDRunReactionDiffusion_g.glsl"));
+
 	mRenderRDProgram = gl::GlslProg::create(ci::app::loadAsset("RDRenderReactionDiffusion_v.glsl"), ci::app::loadAsset("RDRenderReactionDiffusion_f.glsl"), ci::app::loadAsset("RDRenderReactionDiffusion_g.glsl"));
 	mRenderRDProgram->uniform("uGridSampler", mRDRenderTextureBinding);
 
@@ -90,100 +92,20 @@ void ReactionDiffusionApp::update() {
 	}
 }
 
-// Returns an int corresponding to the vector's max dimension.
-// If the vector is more in +X or -X, returns 0, returns 1 for +Y or -Y, and 2 for +Z or -Z
-// The zero vector returns 2
-int cubeMapDimensionIntFromVec(vec3 dir) {
-	vec3 absV = abs(normalize(dir));
-	return absV.x > absV.y && absV.x > absV.z ? 0 : (absV.y > absV.x && absV.y > absV.z ? 1 : 2);
-}
-
-// Returns the GLenum corresponding to the cubemap face pointed to by the 3D vector
-GLenum cubeMapFaceFromVec(vec3 dir) {
-	int cmDim = cubeMapDimensionIntFromVec(dir);
-
-	// If the max value is 0, then the vector is the zero vector, which is an error
-	// but in this case the function will return GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
-	// because cmDim will be 2 and sign(0) = 0
-	switch (cmDim) {
-		case 0:
-			return glm::sign(dir.x) == 1.0 ? GL_TEXTURE_CUBE_MAP_POSITIVE_X : GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
-		case 1:
-			return glm::sign(dir.y) == 1.0 ? GL_TEXTURE_CUBE_MAP_POSITIVE_Y : GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
-		case 2:
-			return glm::sign(dir.z) == 1.0 ? GL_TEXTURE_CUBE_MAP_POSITIVE_Z : GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
-	}
-
-	// Execution should never reach this point
-	assert(0);
-}
-
-// maps [-1, 1] to [0, 1]
-float map01(float t) {
-	return (t + 1.0) * 0.5;
-}
-
-// maps [0, 1] to [1, 0]
-float inv(float t) {
-	return 1.0 - t;
-}
-
-// Returns the uv coords on the cubemap face corresponding to the position of the 3D vector
-vec2 cubeMapFaceCoordFromVec(vec3 dir) {
-	GLenum cmFace = cubeMapFaceFromVec(dir);
-
-	vec3 divd;
-	switch (cmFace) {
-		case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
-			divd = dir / abs(dir.x);
-			return vec2(inv(map01(divd.z)), map01(divd.y));
-		case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
-			divd = dir / abs(dir.x);
-			return vec2(map01(divd.z), map01(divd.y));
-
-		case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
-			divd = dir / abs(dir.y);
-			return vec2(map01(divd.x), map01(divd.z));
-		case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
-			divd = dir / abs(dir.y);
-			return vec2(map01(divd.x), inv(map01(divd.z)));
-
-		case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
-			divd = dir / abs(dir.z);
-			return vec2(map01(divd.x), inv(map01(divd.y)));
-		case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
-			divd = dir / abs(dir.z);
-			return vec2(inv(map01(divd.x)), inv(map01(divd.y)));
-
-		default:
-			// This code should be unreachable
-			assert(0);
-	}
-}
-
 void ReactionDiffusionApp::disrupt(vec3 dir) {
-	GLenum cmFace = cubeMapFaceFromVec(dir);
-	vec2 cmCoords = cubeMapFaceCoordFromVec(dir);
+	gl::ScopedDepth scpDepth(false);
 
 	gl::ScopedViewport scpView(0, 0, mCubeMapSide, mCubeMapSide);
 	gl::ScopedMatrices scpMat;
 	gl::setMatricesWindow(mCubeMapSide, mCubeMapSide);
 
-	GLuint tempFbo;
-	glGenFramebuffers(1, & tempFbo);
-	glBindFramebuffer(GL_FRAMEBUFFER, tempFbo);
+	mDisruptShader->uniform("uDisruptionPoint", normalize(dir));
 
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, cmFace, mSourceTex->getId(), 0);
+	gl::ScopedGlslProg scpShader(mDisruptShader);
 
-	GLenum drawBuffers[] = { GL_COLOR_ATTACHMENT0 };
-	glDrawBuffers(1, drawBuffers);
+	gl::ScopedFramebuffer scpFbo(GL_FRAMEBUFFER, mSourceFbo);
 
-	gl::ScopedColor scpC(Color(0, 1, 0));
-
-	gl::drawSolidCircle(cmCoords * (float) mCubeMapSide, 100.0f);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glDeleteFramebuffers(1, & tempFbo);
+	gl::draw(mPointMesh);
 }
 
 gl::TextureCubeMapRef ReactionDiffusionApp::draw() {

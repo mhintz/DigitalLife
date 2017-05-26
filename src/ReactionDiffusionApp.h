@@ -41,6 +41,8 @@ public:
 	gl::GlslProgRef mRDProgram;
 	gl::VboMeshRef mPointMesh;
 
+	gl::GlslProgRef mDisruptShader;
+
 	gl::GlslProgRef mRenderRDProgram;
 	gl::VboMeshRef mCubeMapFacesMesh;
 	gl::BatchRef mRenderCubeMapBatch;
