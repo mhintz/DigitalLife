@@ -93,6 +93,10 @@ void ReactionDiffusionApp::update() {
 }
 
 void ReactionDiffusionApp::disrupt(vec3 dir) {
+	dir.y *= -1;
+	// ^^^^ This is a total hack
+	// I honestly don't know why this is necessary but it is :/
+
 	gl::ScopedDepth scpDepth(false);
 
 	gl::ScopedViewport scpView(0, 0, mCubeMapSide, mCubeMapSide);
