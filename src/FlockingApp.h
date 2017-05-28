@@ -30,7 +30,8 @@ public:
 	float mCohesionDist = 0.0530;
 	float mCohesionMod = 0.0500;
 
-	int mNumBirds = 64 * 64; // 4096
+	int mNumBirds = 56 * 56; // 3136
+	// int mNumBirds = 64 * 64; // 4096
 	// int mNumBirds = 8192; // 4096 * 2
 	int mFboSide;
 
