@@ -112,10 +112,10 @@ void DigitalLifeApp::keyDown(KeyEvent evt) {
 		mActiveAppType = AppType::CUBE_DEBUG;
 	} else if (evt.getCode() == KeyEvent::KEY_d) {
 		console() << "Disrupt!!!" << std::endl;
-		mFlockingApp.disrupt(vec3(1, -1, 1));
-		mFlockingApp.disrupt(vec3(-1, -1, 1));
-		mFlockingApp.disrupt(vec3(1, -1, -1));
-		mFlockingApp.disrupt(vec3(-1, -1, -1));
+		mNetworkApp.disrupt(vec3(1, -1, 1));
+		mNetworkApp.disrupt(vec3(-1, -1, 1));
+		mNetworkApp.disrupt(vec3(1, -1, -1));
+		mNetworkApp.disrupt(vec3(-1, -1, -1));
 	}
 }
 

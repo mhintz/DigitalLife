@@ -124,6 +124,10 @@ void NetworkApp::update()
 		mNetworkNodes[idx].mInfected = willBeInfected[idx];
 	}
 
+	this->setColorAttribs();
+}
+
+void NetworkApp::setColorAttribs() {
 	vector<vec3> nodeColors(mNetworkNodes.size());
 	for (int idx = 0; idx < mNetworkNodes.size(); idx++) {
 		nodeColors[idx] = mNetworkNodes[idx].mInfected ? vec3(1, 0, 0) : vec3(0, 0, 1);
@@ -140,6 +144,21 @@ void NetworkApp::update()
 	}
 
 	mLinksMesh->findAttrib(geom::COLOR)->second->copyData(vectorByteSize(linkColors), linkColors.data());
+}
+
+void NetworkApp::disrupt(vec3 dir) {
+	float const DISRUPT_RADIUS = 0.40;
+	vec3 const disruptDir = normalize(dir);
+
+	bool infectChange = randFloat() < 0.2;
+
+	for (auto & node : mNetworkNodes) {
+		if (distance(node.mPos, disruptDir) < DISRUPT_RADIUS) {
+			node.mInfected = infectChange;
+		}
+	}
+
+	this->setColorAttribs();
 }
 
 gl::TextureCubeMapRef NetworkApp::draw()

@@ -30,6 +30,9 @@ public:
 	void setup();
 	void update();
 	ci::gl::TextureCubeMapRef draw();
+	void disrupt(ci::vec3 dir);
+
+	void setColorAttribs();
 
 	int const mNumNetworkNodes = 1500;
 	int const mNumLinksPerNode = 8;
