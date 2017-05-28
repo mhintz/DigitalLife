@@ -16,6 +16,7 @@ public:
 	void setup();
 	void update();
 	ci::gl::TextureCubeMapRef draw();
+	void disrupt(ci::vec3 dir);
 
 	float mMinSpeed = 0.0030;
 	float mMaxSpeed = 0.0070;
@@ -46,6 +47,8 @@ public:
 
 	ci::gl::GlslProgRef mBirdPosUpdateProg;
 	ci::gl::GlslProgRef mBirdVelUpdateProg;
+
+	ci::gl::GlslProgRef mBirdDisruptProg;
 
 	ci::gl::VboMeshRef mBirdIndexMesh;
 	ci::gl::GlslProgRef mBirdRenderProg;

@@ -68,6 +68,11 @@ void FlockingApp::setup() {
 	mBirdVelUpdateProg->uniform("uPositions", mPosTextureBind);
 	mBirdVelUpdateProg->uniform("uVelocities", mVelTextureBind);
 
+	mBirdDisruptProg = gl::GlslProg::create(app::loadAsset("FLRunBirds_v.glsl"), app::loadAsset("FLDisruptBirds_f.glsl"));
+	mBirdDisruptProg->uniform("uGridSide", mFboSide);
+	mBirdDisruptProg->uniform("uPositions", mPosTextureBind);
+	mBirdDisruptProg->uniform("uVelocities", mVelTextureBind);
+
 	// Initialize the bird positions index VBO
 	std::vector<vec2> posIndex(mNumBirds);
 	for (int ypos = 0; ypos < mFboSide; ypos++) {
@@ -156,6 +161,25 @@ void FlockingApp::update()
 	}
 
 	std::swap(mPositionsSource, mPositionsDest);
+	std::swap(mVelocitiesSource, mVelocitiesDest);
+}
+
+void FlockingApp::disrupt(vec3 dir) {
+	gl::ScopedBlend scpBlend(false);
+	gl::ScopedViewport scpView(0, 0, mFboSide, mFboSide);
+	gl::ScopedMatrices scpMat;
+	gl::setMatricesWindow(mFboSide, mFboSide);
+
+	// velocity update, but position doesn't change
+	mBirdDisruptProg->uniform("uDisruptPoint", normalize(dir));
+	gl::ScopedGlslProg scpShader(mBirdDisruptProg);
+	gl::ScopedTextureBind scpPosTex(mPositionsSource->getColorTexture(), mPosTextureBind);
+	gl::ScopedTextureBind scpVelTex(mVelocitiesSource->getColorTexture(), mVelTextureBind);
+
+	gl::ScopedFramebuffer scpFbo(mVelocitiesDest);
+	gl::clear();
+	gl::drawSolidRect(Rectf(0, 0, mFboSide, mFboSide));
+
 	std::swap(mVelocitiesSource, mVelocitiesDest);
 }
 
