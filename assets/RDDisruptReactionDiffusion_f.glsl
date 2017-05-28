@@ -8,8 +8,10 @@ uniform vec3 uDisruptionPoint;
 
 out vec4 FragColor;
 
+#define DISRUPT_RADIUS 0.25
+
 void main() {
-  if (length(normalize(CubeMapTexCoord) - uDisruptionPoint) < 0.25) {
+  if (length(normalize(CubeMapTexCoord) - uDisruptionPoint) < DISRUPT_RADIUS) {
     FragColor = vec4(0, 1.0, 0, 1.0);
   } else {
     discard;
