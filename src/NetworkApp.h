@@ -9,7 +9,6 @@
 #include "cinder/Rand.h"
 
 #include "CoreMath.h"
-#include "FboCubeMapLayered.h"
 
 class NetworkNode {
 public:
@@ -46,8 +45,6 @@ public:
 	ci::gl::VboMeshRef mNodesMesh;
 	ci::gl::VboMeshRef mLinksMesh;
 
-	ci::gl::GlslProgRef mRenderLinesToCubeMap;
-	ci::gl::GlslProgRef mRenderPointsToCubeMap;
-	FboCubeMapLayeredRef mOutputCubeFbo;
-	ci::gl::UboRef mMatrixBuffer;
+	ci::gl::GlslProgRef mRenderToCubeMap;
+	ci::gl::FboCubeMapRef mOutputCubeFbo;
 };

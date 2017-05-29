@@ -11,22 +11,15 @@ void NetworkApp::setup()
 	auto cubeMapFormat = gl::TextureCubeMap::Format()
 		.magFilter(GL_LINEAR)
 		.minFilter(GL_LINEAR)
-		.internalFormat(GL_RGB8);
+		.internalFormat(GL_RGB8)
+		.mipmap();
 
-	auto cubeMapFboFmt = FboCubeMapLayered::Format().colorFormat(cubeMapFormat);
+	auto cubeMapFboFmt = gl::FboCubeMap::Format()
+		.textureCubeMapFormat(cubeMapFormat);
 
-	mOutputCubeFbo = FboCubeMapLayered::create(OUTPUT_CUBE_MAP_SIDE, OUTPUT_CUBE_MAP_SIDE, cubeMapFboFmt);
+	mOutputCubeFbo = gl::FboCubeMap::create(OUTPUT_CUBE_MAP_SIDE * 2, OUTPUT_CUBE_MAP_SIDE * 2, cubeMapFboFmt);
 
-	int const matrixBindingPoint = 1;
-
-	mMatrixBuffer = mOutputCubeFbo->generateCameraMatrixBuffer();
-	mMatrixBuffer->bindBufferBase(matrixBindingPoint);
-
-	mRenderLinesToCubeMap = gl::GlslProg::create(app::loadAsset("DLRenderIntoCubeMap_v.glsl"), app::loadAsset("DLRenderIntoCubeMap_f.glsl"), app::loadAsset("DLRenderIntoCubeMap_lines_g.glsl"));
-	mRenderLinesToCubeMap->uniformBlock("uMatrices", matrixBindingPoint);
-
-	mRenderPointsToCubeMap = gl::GlslProg::create(app::loadAsset("DLRenderIntoCubeMap_v.glsl"), app::loadAsset("DLRenderIntoCubeMap_f.glsl"), app::loadAsset("DLRenderIntoCubeMap_points_g.glsl"));
-	mRenderPointsToCubeMap->uniformBlock("uMatrices", matrixBindingPoint);
+	mRenderToCubeMap = gl::getStockShader(gl::ShaderDef().color());
 
 	// Set up the simulation data
 	for (int idx = 0; idx < mNumNetworkNodes; idx++) {
@@ -163,7 +156,7 @@ void NetworkApp::disrupt(vec3 dir) {
 
 gl::TextureCubeMapRef NetworkApp::draw()
 {
-	gl::ScopedFramebuffer scpFbo(GL_FRAMEBUFFER, mOutputCubeFbo->getId());
+	gl::context()->pushFramebuffer();
 
 	gl::ScopedDepth scpDepth(true);
 
@@ -172,21 +165,21 @@ gl::TextureCubeMapRef NetworkApp::draw()
 
 	gl::pointSize(5.0);
 
-	gl::clear(Color(0, 0, 0));
+	gl::ScopedGlslProg scpShader(mRenderToCubeMap);
 
-	{
-		gl::ScopedGlslProg scpShader(mRenderLinesToCubeMap);
+	for (uint8_t dir = 0; dir < 6; ++dir) {
+		gl::setProjectionMatrix(ci::CameraPersp(mOutputCubeFbo->getWidth(), mOutputCubeFbo->getHeight(), 90.0f, 0.5, 5.0).getProjectionMatrix());
+		gl::setViewMatrix(mOutputCubeFbo->calcViewMatrix(GL_TEXTURE_CUBE_MAP_POSITIVE_X + dir, vec3(0)));
+		mOutputCubeFbo->bindFramebufferFace(GL_TEXTURE_CUBE_MAP_POSITIVE_X + dir);
 
+		gl::clear(ColorA(0, 0, 0, 0));
 		gl::draw(mLinksMesh);
-	}
-
-	{
-		gl::ScopedGlslProg scpShader(mRenderPointsToCubeMap);
-
 		gl::draw(mNodesMesh);
 	}
 
 	gl::pointSize(1.0);
 
-	return mOutputCubeFbo->getColorTex();
+	gl::context()->popFramebuffer();
+
+	return mOutputCubeFbo->getTextureCubeMap();
 }

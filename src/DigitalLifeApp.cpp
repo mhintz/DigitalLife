@@ -63,7 +63,8 @@ class DigitalLifeApp : public App {
 void DigitalLifeApp::prepareSettings(Settings * settings) {
 	settings->setTitle("Digital Life");
 	settings->setHighDensityDisplayEnabled();
-	settings->setWindowSize(800, 650);
+	// settings->setWindowSize(800, 650);
+	settings->setFullScreen();
 }
 
 void DigitalLifeApp::setup() {
@@ -198,7 +199,7 @@ void DigitalLifeApp::draw() {
 			// gl::draw(mOutputFbo->getColorTexture(), Rectf(0, 0, getWindowWidth(), getWindowHeight() / 3));
 		}
 
-		// gl::drawString(std::to_string(getAverageFps()), vec2(10.0f, 20.0f), ColorA(1.0f, 1.0f, 1.0f, 1.0f));
+		gl::drawString(std::to_string(getAverageFps()), vec2(10.0f, getWindowHeight() - 40.0f), ColorA(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 
 	// Publish to Syphon
