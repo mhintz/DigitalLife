@@ -1,3 +1,4 @@
+#include <string>
 #include <vector>
 
 #include "cinder/app/App.h"
@@ -6,6 +7,8 @@
 #include "cinder/Camera.h"
 #include "cinder/CameraUi.h"
 #include "cinder/ObjLoader.h"
+#include "cinder/Serial.h"
+#include "cinder/Log.h"
 
 #include "Syphon.h"
 
@@ -39,6 +42,8 @@ class DigitalLifeApp : public App {
 
 	void keyDown(KeyEvent evt) override;
 
+	vec3 getDisruptionVector(uint8_t dir);
+
 	gl::FboRef mOutputFbo;
 	uint8_t mAppTextureBind = 0;
 	gl::BatchRef mOutputBatch;
@@ -54,6 +59,8 @@ class DigitalLifeApp : public App {
 	FboCubeMapLayeredRef mSparckConfigDrawFbo;
 	gl::UboRef mSparckConfigDrawMatrices;
 	gl::TextureCubeMapRef drawDebugCube();
+
+	SerialRef mArduinoCxn;
 
 	ReactionDiffusionApp mReactionDiffusionApp;
 	FlockingApp mFlockingApp;
@@ -120,10 +127,49 @@ void DigitalLifeApp::keyDown(KeyEvent evt) {
 	}
 }
 
+vec3 DigitalLifeApp::getDisruptionVector(uint8_t dir) {
+	assert(0 <= dir && dir <= 5);
+
+	float const SLICE_INC = M_TWO_PI / 6.0f;
+	float const SLICE_START = -SLICE_INC / 2.0f;
+
+	float zxAngle = SLICE_START + dir * SLICE_INC + randFloat() * SLICE_INC; // angle in the zx plane
+	float yAngle = clamp(M_PI / 8.0f + randFloat() * M_PI, 0, M_PI);
+
+	return getPointOnSphere(yAngle, zxAngle);
+}
+
 void DigitalLifeApp::update() {
+	if (!mArduinoCxn) {
+		if (Serial::getDevices().size()) {
+			try {
+				auto cxnDevice = Serial::findDeviceByNameContains("cu.usbmodem", true);
+				mArduinoCxn = Serial::create(cxnDevice, 9600);
+				console() << "Successfully connected with arduino at port: " << cxnDevice.getName() << std::endl;
+			} catch (SerialExc exc) {
+				CI_LOG_EXCEPTION("Failed to connected to arduino", exc);
+			}
+		} else {
+			console() << "No active Arduino detected!" << std::endl;
+		}
+	}
+
+	if (mArduinoCxn && mArduinoCxn->getNumBytesAvailable() > 0) {
+		uint8_t ardMessage;
+		size_t readBytes = mArduinoCxn->readAvailableBytes(& ardMessage, 1);
+
+		vec3 disruptionVector = getDisruptionVector(ardMessage);
+		switch (mActiveAppType) {
+			case AppType::REACTION_DIFFUSION: mReactionDiffusionApp.disrupt(disruptionVector); break;
+			case AppType::FLOCKING: mFlockingApp.disrupt(disruptionVector); break;
+			case AppType::NETWORK: mNetworkApp.disrupt(disruptionVector); break;
+			case AppType::CUBE_DEBUG: break;
+		}
+	}
+
 	switch (mActiveAppType) {
-		case AppType::REACTION_DIFFUSION: mReactionDiffusionApp.update();break;
-		case AppType::FLOCKING: mFlockingApp.update();break;
+		case AppType::REACTION_DIFFUSION: mReactionDiffusionApp.update(); break;
+		case AppType::FLOCKING: mFlockingApp.update(); break;
 		case AppType::NETWORK: mNetworkApp.update(); break;
 		case AppType::CUBE_DEBUG: break;
 	}
@@ -184,6 +230,14 @@ void DigitalLifeApp::draw() {
 			gl::ScopedGlslProg scpShader(mRenderTexAsSphereShader);
 
 			gl::draw(geom::Sphere().center(vec3(0)).radius(1.0f).subdivisions(50));
+		}
+
+		{
+			gl::ScopedDepth scpDepth(true);
+			gl::ScopedMatrices scpMat;
+			gl::setMatrices(mCamera);
+
+			gl::drawCoordinateFrame(2.0f);
 		}
 
 		{
