@@ -80,7 +80,7 @@ void DigitalLifeApp::prepareSettings(Settings * settings) {
 	settings->setTitle("Digital Life");
 	settings->setHighDensityDisplayEnabled();
 	// settings->setWindowSize(800, 650);
-	settings->setFullScreen();
+//	settings->setFullScreen();
 }
 
 void DigitalLifeApp::setup() {
@@ -175,15 +175,20 @@ void DigitalLifeApp::update() {
 
 	if (mArduinoCxn && mArduinoCxn->getNumBytesAvailable() > 0) {
 		uint8_t ardMessage;
-		size_t readBytes = mArduinoCxn->readAvailableBytes(& ardMessage, 1);
-
-		vec3 disruptionVector = getDisruptionVector(ardMessage);
-		switch (mActiveAppType) {
-			case AppType::REACTION_DIFFUSION: mReactionDiffusionApp.disrupt(disruptionVector); break;
-			case AppType::FLOCKING: mFlockingApp.disrupt(disruptionVector); break;
-			case AppType::NETWORK: mNetworkApp.disrupt(disruptionVector); break;
-			case AppType::CUBE_DEBUG: break;
-		}
+		mArduinoCxn->readAvailableBytes(& ardMessage, 1);
+        
+        if (0 <= ardMessage && ardMessage <= 5) {
+            console() << "Disturb at: " << (int) ardMessage << std::endl;
+            vec3 disruptionVector = getDisruptionVector(ardMessage);
+            switch (mActiveAppType) {
+                case AppType::REACTION_DIFFUSION: mReactionDiffusionApp.disrupt(disruptionVector); break;
+                case AppType::FLOCKING: mFlockingApp.disrupt(disruptionVector); break;
+                case AppType::NETWORK: mNetworkApp.disrupt(disruptionVector); break;
+                case AppType::CUBE_DEBUG: break;
+            }
+        } else {
+            console() << "weird value from microphones: " << (int) ardMessage << std::endl;
+        }
 	}
 
 	if (mActiveAppMode == AppMode::DISPLAY) {
