@@ -9,6 +9,7 @@
 #include "cinder/ObjLoader.h"
 #include "cinder/Serial.h"
 #include "cinder/Log.h"
+#include "cinder/audio/audio.h"
 
 #include "Syphon.h"
 
@@ -32,6 +33,11 @@ enum class AppType {
 	CUBE_DEBUG
 };
 
+enum class AppMode {
+	DEVELOPMENT,
+	DISPLAY
+};
+
 class DigitalLifeApp : public App {
   public:
 	static void prepareSettings(Settings * settings);
@@ -50,6 +56,7 @@ class DigitalLifeApp : public App {
 	ciSyphon::ServerRef mSyphonServer;
 
 	AppType mActiveAppType = AppType::REACTION_DIFFUSION;
+	AppMode mActiveAppMode = AppMode::DEVELOPMENT;
 
 	CameraPersp mCamera;
 	CameraUi mCameraUi;
@@ -65,6 +72,8 @@ class DigitalLifeApp : public App {
 	ReactionDiffusionApp mReactionDiffusionApp;
 	FlockingApp mFlockingApp;
 	NetworkApp mNetworkApp;
+
+	audio::VoiceSamplePlayerNodeRef mNarrationPlayer;
 };
 
 void DigitalLifeApp::prepareSettings(Settings * settings) {
@@ -102,6 +111,14 @@ void DigitalLifeApp::setup() {
 	mFlockingApp.setup();
 	mNetworkApp.setup();
 
+	// Setup audio track
+
+	audio::SourceFileRef narrationTrackFile = audio::load(loadAsset("AudioNarration.mp3"));
+	mNarrationPlayer = audio::Voice::create(narrationTrackFile);
+
+	mNarrationPlayer->getSamplePlayerNode()->setLoopEnabled();
+
+	// Setup viewing camera
 	mCamera.lookAt(vec3(0, 0, 3.5), vec3(0), vec3(0, 1, 0));
 	mCameraUi = CameraUi(& mCamera, getWindow());
 	mRenderTexAsSphereShader = gl::GlslProg::create(loadAsset("DLRenderOutputTexAsSphere_v.glsl"), loadAsset("DLRenderOutputTexAsSphere_f.glsl"));
@@ -118,12 +135,14 @@ void DigitalLifeApp::keyDown(KeyEvent evt) {
 		mActiveAppType = AppType::NETWORK;
 	} else if (evt.getCode() == KeyEvent::KEY_4) {
 		mActiveAppType = AppType::CUBE_DEBUG;
-	} else if (evt.getCode() == KeyEvent::KEY_d) {
-		console() << "Disrupt!!!" << std::endl;
-		mNetworkApp.disrupt(vec3(1, -1, 1));
-		mNetworkApp.disrupt(vec3(-1, -1, 1));
-		mNetworkApp.disrupt(vec3(1, -1, -1));
-		mNetworkApp.disrupt(vec3(-1, -1, -1));
+	} else if (evt.getCode() == KeyEvent::KEY_SPACE) {
+		if (mActiveAppMode == AppMode::DEVELOPMENT) {
+			if (mNarrationPlayer->isPlaying()) {
+				mNarrationPlayer->pause();
+			} else {
+				mNarrationPlayer->start();
+			}
+		}
 	}
 }
 
@@ -164,6 +183,12 @@ void DigitalLifeApp::update() {
 			case AppType::FLOCKING: mFlockingApp.disrupt(disruptionVector); break;
 			case AppType::NETWORK: mNetworkApp.disrupt(disruptionVector); break;
 			case AppType::CUBE_DEBUG: break;
+		}
+	}
+
+	if (mActiveAppMode == AppMode::DISPLAY) {
+		if (!mNarrationPlayer->isPlaying()) {
+			mNarrationPlayer->start();
 		}
 	}
 
@@ -215,23 +240,24 @@ void DigitalLifeApp::draw() {
 		mOutputBatch->draw();
 	}
 
-	// Debug zone
+	// Draw the main sphere monitoring window
 	{
-		{
-			gl::clear(Color8u(0, 0, 38));
+		gl::clear();
 
-			gl::ScopedDepth scpDepth(true);
-			gl::ScopedFaceCulling scpCull(true, GL_BACK);
+		gl::ScopedDepth scpDepth(true);
+		gl::ScopedFaceCulling scpCull(true, GL_BACK);
 
-			gl::ScopedMatrices scpMat;
-			gl::setMatrices(mCamera);
+		gl::ScopedMatrices scpMat;
+		gl::setMatrices(mCamera);
 
-			gl::ScopedTextureBind scpTex(appInstanceCubeMapFrame);
-			gl::ScopedGlslProg scpShader(mRenderTexAsSphereShader);
+		gl::ScopedTextureBind scpTex(appInstanceCubeMapFrame);
+		gl::ScopedGlslProg scpShader(mRenderTexAsSphereShader);
 
-			gl::draw(geom::Sphere().center(vec3(0)).radius(1.0f).subdivisions(50));
-		}
+		gl::draw(geom::Sphere().center(vec3(0)).radius(1.0f).subdivisions(50));
+	}
 
+	// Debug zone
+	if (mActiveAppMode == AppMode::DEVELOPMENT) {
 		{
 			gl::ScopedDepth scpDepth(true);
 			gl::ScopedMatrices scpMat;
