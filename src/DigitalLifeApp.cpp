@@ -96,7 +96,7 @@ void DigitalLifeApp::setup() {
 	mOutputFbo = gl::Fbo::create(6 * OUTPUT_CUBE_MAP_SIDE, OUTPUT_CUBE_MAP_SIDE);
 
 	auto outputMesh = makeCubeMapToRowLayoutMesh_SPARCK(OUTPUT_CUBE_MAP_SIDE);
-	auto outputShader = gl::GlslProg::create(loadAsset("DLOutputCubeMapToRect_v.glsl"), loadAsset("DLOutputCubeMapToRect_f.glsl"));
+	auto outputShader = gl::GlslProg::create(loadResource("DLOutputCubeMapToRect_v.glsl"), loadResource("DLOutputCubeMapToRect_f.glsl"));
 	outputShader->uniform("uCubeMap", mAppTextureBind);
 
 	mOutputBatch = gl::Batch::create(outputMesh, outputShader);
@@ -104,12 +104,12 @@ void DigitalLifeApp::setup() {
 	mSyphonServer = ciSyphon::Server::create();
 	mSyphonServer->setName("DigitalLifeServer");
 
-	auto cubeObj = ObjLoader(loadAsset("BoxSides.obj"));
+	auto cubeObj = ObjLoader(loadResource("BoxSides.obj"));
 	auto cubeVboMesh = gl::VboMesh::create(cubeObj, {
 		{gl::VboMesh::Layout().attrib(geom::Attrib::POSITION, 3), nullptr},
 		{gl::VboMesh::Layout().attrib(geom::Attrib::TEX_COORD_0, 2), nullptr}
 	});
-	auto cubeShader = gl::GlslProg::create(loadAsset("DLRenderIntoCubeMap_v.glsl"), loadAsset("DLRenderIntoCubeMap_f.glsl"), loadAsset("DLRenderIntoCubeMap_triangles_g.glsl"));
+	auto cubeShader = gl::GlslProg::create(loadResource("DLRenderIntoCubeMap_v.glsl"), loadResource("DLRenderIntoCubeMap_f.glsl"), loadResource("DLRenderIntoCubeMap_triangles_g.glsl"));
 	mSparckConfigCube = gl::Batch::create(cubeVboMesh, cubeShader);
 	mSparckConfigDrawFbo = FboCubeMapLayered::create(OUTPUT_CUBE_MAP_SIDE, OUTPUT_CUBE_MAP_SIDE);
 	mSparckConfigDrawMatrices = mSparckConfigDrawFbo->generateCameraMatrixBuffer();
@@ -121,7 +121,7 @@ void DigitalLifeApp::setup() {
 	mNetworkApp.setup();
 
 	// Setup audio track and coordinated simulation changes
-	audio::SourceFileRef narrationTrackFile = audio::load(loadAsset("AudioNarration.mp3"));
+	audio::SourceFileRef narrationTrackFile = audio::load(loadResource("AudioNarration.mp3"));
 	mNarrationPlayer = audio::Voice::create(narrationTrackFile);
 
 	mPlaybackTimeline.setDefaultRemoveOnFinish(false);
@@ -146,7 +146,7 @@ void DigitalLifeApp::setup() {
 	// Setup viewing camera
 	mCamera.lookAt(vec3(0, 0, 3.5), vec3(0), vec3(0, 1, 0));
 	mCameraUi = CameraUi(& mCamera, getWindow());
-	mRenderTexAsSphereShader = gl::GlslProg::create(loadAsset("DLRenderOutputTexAsSphere_v.glsl"), loadAsset("DLRenderOutputTexAsSphere_f.glsl"));
+	mRenderTexAsSphereShader = gl::GlslProg::create(loadResource("DLRenderOutputTexAsSphere_v.glsl"), loadResource("DLRenderOutputTexAsSphere_f.glsl"));
 }
 
 void DigitalLifeApp::keyDown(KeyEvent evt) {

@@ -58,17 +58,17 @@ void FlockingApp::setup() {
 	mVelocitiesDest = gl::Fbo::create(mFboSide, mFboSide, fboDefaultFmt);
 
 	// Initialize the birds update routine
-	mBirdPosUpdateProg = gl::GlslProg::create(app::loadAsset("FLRunBirds_v.glsl"), app::loadAsset("FLRunBirdsPosition_f.glsl"));
+	mBirdPosUpdateProg = gl::GlslProg::create(app::loadResource("FLRunBirds_v.glsl"), app::loadResource("FLRunBirdsPosition_f.glsl"));
 	mBirdPosUpdateProg->uniform("uGridSide", mFboSide);
 	mBirdPosUpdateProg->uniform("uPositions", mPosTextureBind);
 	mBirdPosUpdateProg->uniform("uVelocities", mVelTextureBind);
 
-	mBirdVelUpdateProg = gl::GlslProg::create(app::loadAsset("FLRunBirds_v.glsl"), app::loadAsset("FLRunBirdsVelocity_f.glsl"));
+	mBirdVelUpdateProg = gl::GlslProg::create(app::loadResource("FLRunBirds_v.glsl"), app::loadResource("FLRunBirdsVelocity_f.glsl"));
 	mBirdVelUpdateProg->uniform("uGridSide", mFboSide);
 	mBirdVelUpdateProg->uniform("uPositions", mPosTextureBind);
 	mBirdVelUpdateProg->uniform("uVelocities", mVelTextureBind);
 
-	mBirdDisruptProg = gl::GlslProg::create(app::loadAsset("FLRunBirds_v.glsl"), app::loadAsset("FLDisruptBirds_f.glsl"));
+	mBirdDisruptProg = gl::GlslProg::create(app::loadResource("FLRunBirds_v.glsl"), app::loadResource("FLDisruptBirds_f.glsl"));
 	mBirdDisruptProg->uniform("uGridSide", mFboSide);
 	mBirdDisruptProg->uniform("uPositions", mPosTextureBind);
 	mBirdDisruptProg->uniform("uVelocities", mVelTextureBind);
@@ -85,7 +85,7 @@ void FlockingApp::setup() {
 	mBirdIndexMesh = gl::VboMesh::create(posIndex.size(), GL_POINTS, { { birdsBufferLayout, birdsVbo } });
 
 	// Initialize the birds render routine
-	mBirdRenderProg = gl::GlslProg::create(app::loadAsset("FLRenderBirds_v.glsl"), app::loadAsset("FLRenderBirds_f.glsl"), app::loadAsset("FLRenderBirds_g.glsl"));
+	mBirdRenderProg = gl::GlslProg::create(app::loadResource("FLRenderBirds_v.glsl"), app::loadResource("FLRenderBirds_f.glsl"), app::loadResource("FLRenderBirds_g.glsl"));
 	mBirdRenderProg->uniform("uBirdPositions", mPosTextureBind);
 	mBirdRenderProg->uniform("uBirdVelocities", mVelTextureBind);
 	mBirdRenderBatch = gl::Batch::create(mBirdIndexMesh, mBirdRenderProg, { {geom::CUSTOM_0, "birdIndex"} });

@@ -30,6 +30,32 @@
 		E9C7F784DA234E0CB055E6D1 /* CoreMath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C8D25F282B84A76AF017FD0 /* CoreMath.cpp */; };
 		EF0262E41E70660E005669EA /* ReactionDiffusionApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF0262E21E70660E005669EA /* ReactionDiffusionApp.cpp */; };
 		EF0263081E70AAA8005669EA /* NetworkApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF0263061E70AAA8005669EA /* NetworkApp.cpp */; };
+		EF095A181EE499560080D7B4 /* DLRenderIntoCubeMap_lines_g.glsl in Resources */ = {isa = PBXBuildFile; fileRef = EF095A031EE499560080D7B4 /* DLRenderIntoCubeMap_lines_g.glsl */; };
+		EF095A191EE499560080D7B4 /* DLRenderIntoCubeMap_points_g.glsl in Resources */ = {isa = PBXBuildFile; fileRef = EF095A041EE499560080D7B4 /* DLRenderIntoCubeMap_points_g.glsl */; };
+		EF095A1A1EE499560080D7B4 /* DLRenderIntoCubeMap_triangles_g.glsl in Resources */ = {isa = PBXBuildFile; fileRef = EF095A051EE499560080D7B4 /* DLRenderIntoCubeMap_triangles_g.glsl */; };
+		EF095A1B1EE499560080D7B4 /* DLRenderIntoCubeMap_v.glsl in Resources */ = {isa = PBXBuildFile; fileRef = EF095A061EE499560080D7B4 /* DLRenderIntoCubeMap_v.glsl */; };
+		EF095A1C1EE499560080D7B4 /* DLRenderOutputTexAsSphere_f.glsl in Resources */ = {isa = PBXBuildFile; fileRef = EF095A071EE499560080D7B4 /* DLRenderOutputTexAsSphere_f.glsl */; };
+		EF095A1D1EE499560080D7B4 /* DLRenderOutputTexAsSphere_v.glsl in Resources */ = {isa = PBXBuildFile; fileRef = EF095A081EE499560080D7B4 /* DLRenderOutputTexAsSphere_v.glsl */; };
+		EF095A1E1EE499560080D7B4 /* FLDisruptBirds_f.glsl in Resources */ = {isa = PBXBuildFile; fileRef = EF095A091EE499560080D7B4 /* FLDisruptBirds_f.glsl */; };
+		EF095A1F1EE499560080D7B4 /* FLRenderBirds_f.glsl in Resources */ = {isa = PBXBuildFile; fileRef = EF095A0A1EE499560080D7B4 /* FLRenderBirds_f.glsl */; };
+		EF095A201EE499560080D7B4 /* FLRenderBirds_g.glsl in Resources */ = {isa = PBXBuildFile; fileRef = EF095A0B1EE499560080D7B4 /* FLRenderBirds_g.glsl */; };
+		EF095A211EE499560080D7B4 /* FLRenderBirds_v.glsl in Resources */ = {isa = PBXBuildFile; fileRef = EF095A0C1EE499560080D7B4 /* FLRenderBirds_v.glsl */; };
+		EF095A221EE499560080D7B4 /* FLRenderBirdsToSphere_f.glsl in Resources */ = {isa = PBXBuildFile; fileRef = EF095A0D1EE499560080D7B4 /* FLRenderBirdsToSphere_f.glsl */; };
+		EF095A231EE499560080D7B4 /* FLRunBirds_v.glsl in Resources */ = {isa = PBXBuildFile; fileRef = EF095A0E1EE499560080D7B4 /* FLRunBirds_v.glsl */; };
+		EF095A241EE499560080D7B4 /* FLRunBirdsPosition_f.glsl in Resources */ = {isa = PBXBuildFile; fileRef = EF095A0F1EE499560080D7B4 /* FLRunBirdsPosition_f.glsl */; };
+		EF095A251EE499560080D7B4 /* FLRunBirdsVelocity_f.glsl in Resources */ = {isa = PBXBuildFile; fileRef = EF095A101EE499560080D7B4 /* FLRunBirdsVelocity_f.glsl */; };
+		EF095A261EE499560080D7B4 /* RDDisruptReactionDiffusion_f.glsl in Resources */ = {isa = PBXBuildFile; fileRef = EF095A111EE499560080D7B4 /* RDDisruptReactionDiffusion_f.glsl */; };
+		EF095A271EE499560080D7B4 /* RDRenderReactionDiffusion_f.glsl in Resources */ = {isa = PBXBuildFile; fileRef = EF095A121EE499560080D7B4 /* RDRenderReactionDiffusion_f.glsl */; };
+		EF095A281EE499560080D7B4 /* RDRenderReactionDiffusion_g.glsl in Resources */ = {isa = PBXBuildFile; fileRef = EF095A131EE499560080D7B4 /* RDRenderReactionDiffusion_g.glsl */; };
+		EF095A291EE499560080D7B4 /* RDRenderReactionDiffusion_v.glsl in Resources */ = {isa = PBXBuildFile; fileRef = EF095A141EE499560080D7B4 /* RDRenderReactionDiffusion_v.glsl */; };
+		EF095A2A1EE499560080D7B4 /* RDRunReactionDiffusion_f.glsl in Resources */ = {isa = PBXBuildFile; fileRef = EF095A151EE499560080D7B4 /* RDRunReactionDiffusion_f.glsl */; };
+		EF095A2B1EE499560080D7B4 /* RDRunReactionDiffusion_g.glsl in Resources */ = {isa = PBXBuildFile; fileRef = EF095A161EE499560080D7B4 /* RDRunReactionDiffusion_g.glsl */; };
+		EF095A2C1EE499560080D7B4 /* RDRunReactionDiffusion_v.glsl in Resources */ = {isa = PBXBuildFile; fileRef = EF095A171EE499560080D7B4 /* RDRunReactionDiffusion_v.glsl */; };
+		EF095A2F1EE49B1A0080D7B4 /* AudioNarration.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = EF095A2D1EE49B1A0080D7B4 /* AudioNarration.mp3 */; };
+		EF095A301EE49B1A0080D7B4 /* BoxSides.obj in Resources */ = {isa = PBXBuildFile; fileRef = EF095A2E1EE49B1A0080D7B4 /* BoxSides.obj */; };
+		EF095A331EE49B4D0080D7B4 /* DLOutputCubeMapToRect_f.glsl in Resources */ = {isa = PBXBuildFile; fileRef = EF095A311EE49B4D0080D7B4 /* DLOutputCubeMapToRect_f.glsl */; };
+		EF095A341EE49B4D0080D7B4 /* DLOutputCubeMapToRect_v.glsl in Resources */ = {isa = PBXBuildFile; fileRef = EF095A321EE49B4D0080D7B4 /* DLOutputCubeMapToRect_v.glsl */; };
+		EF095A361EE49BA40080D7B4 /* DLRenderIntoCubeMap_f.glsl in Resources */ = {isa = PBXBuildFile; fileRef = EF095A351EE49BA40080D7B4 /* DLRenderIntoCubeMap_f.glsl */; };
 		EF4D6BBD1EE36EED00C4D1C9 /* Cue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF4D6BA41EE36EED00C4D1C9 /* Cue.cpp */; };
 		EF4D6BBE1EE36EED00C4D1C9 /* Timeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF4D6BB71EE36EED00C4D1C9 /* Timeline.cpp */; };
 		EF4D6BBF1EE36EED00C4D1C9 /* TimelineItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF4D6BB91EE36EED00C4D1C9 /* TimelineItem.cpp */; };
@@ -98,6 +124,32 @@
 		EF0262E31E70660E005669EA /* ReactionDiffusionApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReactionDiffusionApp.h; path = ../src/ReactionDiffusionApp.h; sourceTree = "<group>"; };
 		EF0263061E70AAA8005669EA /* NetworkApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NetworkApp.cpp; path = ../src/NetworkApp.cpp; sourceTree = "<group>"; };
 		EF0263071E70AAA8005669EA /* NetworkApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NetworkApp.h; path = ../src/NetworkApp.h; sourceTree = "<group>"; };
+		EF095A031EE499560080D7B4 /* DLRenderIntoCubeMap_lines_g.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = DLRenderIntoCubeMap_lines_g.glsl; path = ../resources/DLRenderIntoCubeMap_lines_g.glsl; sourceTree = "<group>"; };
+		EF095A041EE499560080D7B4 /* DLRenderIntoCubeMap_points_g.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = DLRenderIntoCubeMap_points_g.glsl; path = ../resources/DLRenderIntoCubeMap_points_g.glsl; sourceTree = "<group>"; };
+		EF095A051EE499560080D7B4 /* DLRenderIntoCubeMap_triangles_g.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = DLRenderIntoCubeMap_triangles_g.glsl; path = ../resources/DLRenderIntoCubeMap_triangles_g.glsl; sourceTree = "<group>"; };
+		EF095A061EE499560080D7B4 /* DLRenderIntoCubeMap_v.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = DLRenderIntoCubeMap_v.glsl; path = ../resources/DLRenderIntoCubeMap_v.glsl; sourceTree = "<group>"; };
+		EF095A071EE499560080D7B4 /* DLRenderOutputTexAsSphere_f.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = DLRenderOutputTexAsSphere_f.glsl; path = ../resources/DLRenderOutputTexAsSphere_f.glsl; sourceTree = "<group>"; };
+		EF095A081EE499560080D7B4 /* DLRenderOutputTexAsSphere_v.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = DLRenderOutputTexAsSphere_v.glsl; path = ../resources/DLRenderOutputTexAsSphere_v.glsl; sourceTree = "<group>"; };
+		EF095A091EE499560080D7B4 /* FLDisruptBirds_f.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = FLDisruptBirds_f.glsl; path = ../resources/FLDisruptBirds_f.glsl; sourceTree = "<group>"; };
+		EF095A0A1EE499560080D7B4 /* FLRenderBirds_f.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = FLRenderBirds_f.glsl; path = ../resources/FLRenderBirds_f.glsl; sourceTree = "<group>"; };
+		EF095A0B1EE499560080D7B4 /* FLRenderBirds_g.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = FLRenderBirds_g.glsl; path = ../resources/FLRenderBirds_g.glsl; sourceTree = "<group>"; };
+		EF095A0C1EE499560080D7B4 /* FLRenderBirds_v.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = FLRenderBirds_v.glsl; path = ../resources/FLRenderBirds_v.glsl; sourceTree = "<group>"; };
+		EF095A0D1EE499560080D7B4 /* FLRenderBirdsToSphere_f.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = FLRenderBirdsToSphere_f.glsl; path = ../resources/FLRenderBirdsToSphere_f.glsl; sourceTree = "<group>"; };
+		EF095A0E1EE499560080D7B4 /* FLRunBirds_v.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = FLRunBirds_v.glsl; path = ../resources/FLRunBirds_v.glsl; sourceTree = "<group>"; };
+		EF095A0F1EE499560080D7B4 /* FLRunBirdsPosition_f.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = FLRunBirdsPosition_f.glsl; path = ../resources/FLRunBirdsPosition_f.glsl; sourceTree = "<group>"; };
+		EF095A101EE499560080D7B4 /* FLRunBirdsVelocity_f.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = FLRunBirdsVelocity_f.glsl; path = ../resources/FLRunBirdsVelocity_f.glsl; sourceTree = "<group>"; };
+		EF095A111EE499560080D7B4 /* RDDisruptReactionDiffusion_f.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = RDDisruptReactionDiffusion_f.glsl; path = ../resources/RDDisruptReactionDiffusion_f.glsl; sourceTree = "<group>"; };
+		EF095A121EE499560080D7B4 /* RDRenderReactionDiffusion_f.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = RDRenderReactionDiffusion_f.glsl; path = ../resources/RDRenderReactionDiffusion_f.glsl; sourceTree = "<group>"; };
+		EF095A131EE499560080D7B4 /* RDRenderReactionDiffusion_g.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = RDRenderReactionDiffusion_g.glsl; path = ../resources/RDRenderReactionDiffusion_g.glsl; sourceTree = "<group>"; };
+		EF095A141EE499560080D7B4 /* RDRenderReactionDiffusion_v.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = RDRenderReactionDiffusion_v.glsl; path = ../resources/RDRenderReactionDiffusion_v.glsl; sourceTree = "<group>"; };
+		EF095A151EE499560080D7B4 /* RDRunReactionDiffusion_f.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = RDRunReactionDiffusion_f.glsl; path = ../resources/RDRunReactionDiffusion_f.glsl; sourceTree = "<group>"; };
+		EF095A161EE499560080D7B4 /* RDRunReactionDiffusion_g.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = RDRunReactionDiffusion_g.glsl; path = ../resources/RDRunReactionDiffusion_g.glsl; sourceTree = "<group>"; };
+		EF095A171EE499560080D7B4 /* RDRunReactionDiffusion_v.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = RDRunReactionDiffusion_v.glsl; path = ../resources/RDRunReactionDiffusion_v.glsl; sourceTree = "<group>"; };
+		EF095A2D1EE49B1A0080D7B4 /* AudioNarration.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = AudioNarration.mp3; path = ../resources/AudioNarration.mp3; sourceTree = "<group>"; };
+		EF095A2E1EE49B1A0080D7B4 /* BoxSides.obj */ = {isa = PBXFileReference; lastKnownFileType = text; name = BoxSides.obj; path = ../resources/BoxSides.obj; sourceTree = "<group>"; };
+		EF095A311EE49B4D0080D7B4 /* DLOutputCubeMapToRect_f.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = DLOutputCubeMapToRect_f.glsl; path = ../resources/DLOutputCubeMapToRect_f.glsl; sourceTree = "<group>"; };
+		EF095A321EE49B4D0080D7B4 /* DLOutputCubeMapToRect_v.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; name = DLOutputCubeMapToRect_v.glsl; path = ../resources/DLOutputCubeMapToRect_v.glsl; sourceTree = "<group>"; };
+		EF095A351EE49BA40080D7B4 /* DLRenderIntoCubeMap_f.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = DLRenderIntoCubeMap_f.glsl; path = ../resources/DLRenderIntoCubeMap_f.glsl; sourceTree = "<group>"; };
 		EF4D6BA31EE36EED00C4D1C9 /* Choreograph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Choreograph.h; sourceTree = "<group>"; };
 		EF4D6BA41EE36EED00C4D1C9 /* Cue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Cue.cpp; sourceTree = "<group>"; };
 		EF4D6BA51EE36EED00C4D1C9 /* Cue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cue.h; sourceTree = "<group>"; };
@@ -286,6 +338,32 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				EF095A351EE49BA40080D7B4 /* DLRenderIntoCubeMap_f.glsl */,
+				EF095A311EE49B4D0080D7B4 /* DLOutputCubeMapToRect_f.glsl */,
+				EF095A321EE49B4D0080D7B4 /* DLOutputCubeMapToRect_v.glsl */,
+				EF095A2D1EE49B1A0080D7B4 /* AudioNarration.mp3 */,
+				EF095A2E1EE49B1A0080D7B4 /* BoxSides.obj */,
+				EF095A031EE499560080D7B4 /* DLRenderIntoCubeMap_lines_g.glsl */,
+				EF095A041EE499560080D7B4 /* DLRenderIntoCubeMap_points_g.glsl */,
+				EF095A051EE499560080D7B4 /* DLRenderIntoCubeMap_triangles_g.glsl */,
+				EF095A061EE499560080D7B4 /* DLRenderIntoCubeMap_v.glsl */,
+				EF095A071EE499560080D7B4 /* DLRenderOutputTexAsSphere_f.glsl */,
+				EF095A081EE499560080D7B4 /* DLRenderOutputTexAsSphere_v.glsl */,
+				EF095A091EE499560080D7B4 /* FLDisruptBirds_f.glsl */,
+				EF095A0A1EE499560080D7B4 /* FLRenderBirds_f.glsl */,
+				EF095A0B1EE499560080D7B4 /* FLRenderBirds_g.glsl */,
+				EF095A0C1EE499560080D7B4 /* FLRenderBirds_v.glsl */,
+				EF095A0D1EE499560080D7B4 /* FLRenderBirdsToSphere_f.glsl */,
+				EF095A0E1EE499560080D7B4 /* FLRunBirds_v.glsl */,
+				EF095A0F1EE499560080D7B4 /* FLRunBirdsPosition_f.glsl */,
+				EF095A101EE499560080D7B4 /* FLRunBirdsVelocity_f.glsl */,
+				EF095A111EE499560080D7B4 /* RDDisruptReactionDiffusion_f.glsl */,
+				EF095A121EE499560080D7B4 /* RDRenderReactionDiffusion_f.glsl */,
+				EF095A131EE499560080D7B4 /* RDRenderReactionDiffusion_g.glsl */,
+				EF095A141EE499560080D7B4 /* RDRenderReactionDiffusion_v.glsl */,
+				EF095A151EE499560080D7B4 /* RDRunReactionDiffusion_f.glsl */,
+				EF095A161EE499560080D7B4 /* RDRunReactionDiffusion_g.glsl */,
+				EF095A171EE499560080D7B4 /* RDRunReactionDiffusion_v.glsl */,
 				183874AD564F41AEA860CF55 /* CinderApp.icns */,
 				415664E13C8E478FA86D8C45 /* Info.plist */,
 			);
@@ -450,7 +528,33 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EF095A331EE49B4D0080D7B4 /* DLOutputCubeMapToRect_f.glsl in Resources */,
+				EF095A361EE49BA40080D7B4 /* DLRenderIntoCubeMap_f.glsl in Resources */,
+				EF095A341EE49B4D0080D7B4 /* DLOutputCubeMapToRect_v.glsl in Resources */,
+				EF095A2F1EE49B1A0080D7B4 /* AudioNarration.mp3 in Resources */,
+				EF095A301EE49B1A0080D7B4 /* BoxSides.obj in Resources */,
+				EF095A231EE499560080D7B4 /* FLRunBirds_v.glsl in Resources */,
+				EF095A271EE499560080D7B4 /* RDRenderReactionDiffusion_f.glsl in Resources */,
+				EF095A251EE499560080D7B4 /* FLRunBirdsVelocity_f.glsl in Resources */,
+				EF095A181EE499560080D7B4 /* DLRenderIntoCubeMap_lines_g.glsl in Resources */,
+				EF095A1A1EE499560080D7B4 /* DLRenderIntoCubeMap_triangles_g.glsl in Resources */,
+				EF095A2A1EE499560080D7B4 /* RDRunReactionDiffusion_f.glsl in Resources */,
+				EF095A201EE499560080D7B4 /* FLRenderBirds_g.glsl in Resources */,
+				EF095A1C1EE499560080D7B4 /* DLRenderOutputTexAsSphere_f.glsl in Resources */,
+				EF095A1F1EE499560080D7B4 /* FLRenderBirds_f.glsl in Resources */,
+				EF095A291EE499560080D7B4 /* RDRenderReactionDiffusion_v.glsl in Resources */,
+				EF095A281EE499560080D7B4 /* RDRenderReactionDiffusion_g.glsl in Resources */,
+				EF095A1E1EE499560080D7B4 /* FLDisruptBirds_f.glsl in Resources */,
+				EF095A191EE499560080D7B4 /* DLRenderIntoCubeMap_points_g.glsl in Resources */,
+				EF095A261EE499560080D7B4 /* RDDisruptReactionDiffusion_f.glsl in Resources */,
 				0FC77C5F84094A069591EDBC /* CinderApp.icns in Resources */,
+				EF095A2B1EE499560080D7B4 /* RDRunReactionDiffusion_g.glsl in Resources */,
+				EF095A1B1EE499560080D7B4 /* DLRenderIntoCubeMap_v.glsl in Resources */,
+				EF095A241EE499560080D7B4 /* FLRunBirdsPosition_f.glsl in Resources */,
+				EF095A221EE499560080D7B4 /* FLRenderBirdsToSphere_f.glsl in Resources */,
+				EF095A2C1EE499560080D7B4 /* RDRunReactionDiffusion_v.glsl in Resources */,
+				EF095A1D1EE499560080D7B4 /* DLRenderOutputTexAsSphere_v.glsl in Resources */,
+				EF095A211EE499560080D7B4 /* FLRenderBirds_v.glsl in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
