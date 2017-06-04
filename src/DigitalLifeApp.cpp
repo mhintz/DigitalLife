@@ -48,6 +48,7 @@ class DigitalLifeApp : public App {
 
 	void keyDown(KeyEvent evt) override;
 
+	SerialRef attemptArduinoCxn();
 	vec3 getDisruptionVector(uint8_t dir);
 
 	// App variables
@@ -165,19 +166,35 @@ vec3 DigitalLifeApp::getDisruptionVector(uint8_t dir) {
 	return getPointOnSphere(yAngle, zxAngle);
 }
 
+SerialRef DigitalLifeApp::attemptArduinoCxn() {
+	if (Serial::getDevices().size()) {
+		try {
+			auto cxnDevice = Serial::findDeviceByNameContains("cu.usbmodem", true);
+			auto cxn = Serial::create(cxnDevice, 9600);
+
+			CI_LOG_I("Successfully connected with arduino at port: " << cxnDevice.getName());
+			mArduinoNoCxnLogged = false;
+
+			return cxn;
+		} catch (SerialExc exc) {
+			if (!mArduinoNoCxnLogged) {
+				CI_LOG_EXCEPTION("Failed to connect to arduino", exc);
+				mArduinoNoCxnLogged = true;
+			}
+
+			return nullptr;
+		}
+	} else if (!mArduinoNoCxnLogged) {
+		CI_LOG_W("No active Arduino detected!");
+		mArduinoNoCxnLogged = true;
+	}
+
+	return nullptr;
+}
+
 void DigitalLifeApp::update() {
 	if (!mArduinoCxn) {
-		if (Serial::getDevices().size()) {
-			try {
-				auto cxnDevice = Serial::findDeviceByNameContains("cu.usbmodem", true);
-				mArduinoCxn = Serial::create(cxnDevice, 9600);
-				console() << "Successfully connected with arduino at port: " << cxnDevice.getName() << std::endl;
-			} catch (SerialExc exc) {
-				CI_LOG_EXCEPTION("Failed to connected to arduino", exc);
-			}
-		} else {
-			console() << "No active Arduino detected!" << std::endl;
-		}
+		mArduinoCxn = attemptArduinoCxn();
 	}
 
 	if (mArduinoCxn && mArduinoCxn->getNumBytesAvailable() > 0) {
