@@ -51,7 +51,6 @@ class DigitalLifeApp : public App {
 	void keyDown(KeyEvent evt) override;
 
 	SerialRef attemptArduinoCxn();
-	vec3 getDisruptionVector(uint8_t dir);
 
 	// App variables
 	gl::FboRef mOutputFbo;
@@ -61,7 +60,7 @@ class DigitalLifeApp : public App {
 
 	// App state stuff
 	AppType mActiveAppType = AppType::REACTION_DIFFUSION;
-	AppMode mActiveAppMode = AppMode::DEVELOPMENT;
+	AppMode mActiveAppMode = AppMode::DISPLAY;
 
 	// Arduino connection stuff
 	SerialRef mArduinoCxn;
@@ -91,9 +90,6 @@ class DigitalLifeApp : public App {
 
 void DigitalLifeApp::prepareSettings(Settings * settings) {
 	settings->setTitle("Digital Life");
-	settings->setHighDensityDisplayEnabled();
-	// settings->setWindowSize(800, 650);
-//	settings->setFullScreen();
 }
 
 void DigitalLifeApp::setup() {
@@ -134,7 +130,7 @@ void DigitalLifeApp::setup() {
 
 	mPlaybackTimeline.apply(& mPlaybackProgress)
 		.then<choreograph::RampTo>(mNarrationDuration, mNarrationDuration)
-		.startFn([&] { mNarrationPlayer->start(); })
+		.startFn([&] { mNarrationPlayer->stop(); mNarrationPlayer->start(); })
 		.finishFn([&] { mNarrationPlayer->stop(); mPlaybackTimeline.resetTime(); });
 
 	mPlaybackTimeline.cue([&] { mActiveAppType = AppType::REACTION_DIFFUSION; }, secFromHMS(0, 0, 0.0));
@@ -156,16 +152,20 @@ void DigitalLifeApp::setup() {
 void DigitalLifeApp::keyDown(KeyEvent evt) {
 	if (evt.getCode() == KeyEvent::KEY_ESCAPE) {
 		quit();
-	} else if (evt.getCode() == KeyEvent::KEY_1) {
-		mActiveAppType = AppType::REACTION_DIFFUSION;
-	} else if (evt.getCode() == KeyEvent::KEY_2) {
-		mActiveAppType = AppType::FLOCKING;
-	} else if (evt.getCode() == KeyEvent::KEY_3) {
-		mActiveAppType = AppType::NETWORK;
-	} else if (evt.getCode() == KeyEvent::KEY_4) {
-		mActiveAppType = AppType::CUBE_DEBUG;
-	} else if (evt.getCode() == KeyEvent::KEY_SPACE) {
-		if (mActiveAppMode == AppMode::DEVELOPMENT) {
+	}
+
+	if (mActiveAppMode == AppMode::DEVELOPMENT) {
+		if (evt.getCode() == KeyEvent::KEY_1) {
+			mActiveAppType = AppType::REACTION_DIFFUSION;
+		} else if (evt.getCode() == KeyEvent::KEY_2) {
+			mActiveAppType = AppType::FLOCKING;
+		} else if (evt.getCode() == KeyEvent::KEY_3) {
+			mActiveAppType = AppType::NETWORK;
+		} else if (evt.getCode() == KeyEvent::KEY_4) {
+			mActiveAppType = AppType::CUBE_DEBUG;
+		}
+
+		if (evt.getCode() == KeyEvent::KEY_SPACE) {
 			if (mNarrationPlayer->isPlaying()) {
 				mNarrationPlayer->pause();
 			} else {
@@ -173,18 +173,6 @@ void DigitalLifeApp::keyDown(KeyEvent evt) {
 			}
 		}
 	}
-}
-
-vec3 DigitalLifeApp::getDisruptionVector(uint8_t dir) {
-	assert(0 <= dir && dir <= 5);
-
-	float const SLICE_INC = M_TWO_PI / 6.0f;
-	float const SLICE_START = -SLICE_INC / 2.0f;
-
-	float zxAngle = SLICE_START + dir * SLICE_INC + randFloat() * SLICE_INC; // angle in the zx plane
-	float yAngle = clamp(M_PI / 8.0f + randFloat() * M_PI, 0, M_PI);
-
-	return getPointOnSphere(yAngle, zxAngle);
 }
 
 SerialRef DigitalLifeApp::attemptArduinoCxn() {
@@ -211,6 +199,18 @@ SerialRef DigitalLifeApp::attemptArduinoCxn() {
 	}
 
 	return nullptr;
+}
+
+vec3 getDisruptionVector(uint8_t dir) {
+	assert(0 <= dir && dir <= 5);
+
+	float const SLICE_INC = M_TWO_PI / 6.0f;
+	float const SLICE_START = -SLICE_INC / 2.0f;
+
+	float zxAngle = SLICE_START + dir * SLICE_INC + randFloat() * SLICE_INC; // angle in the zx plane
+	float yAngle = clamp(M_PI / 8.0f + randFloat() * M_PI, 0, M_PI);
+
+	return getPointOnSphere(yAngle, zxAngle);
 }
 
 void DigitalLifeApp::update() {
@@ -289,10 +289,23 @@ void DigitalLifeApp::draw() {
 		mOutputBatch->draw();
 	}
 
-	// Draw the main sphere monitoring window
-	{
-		gl::clear();
+	// Publish to Syphon
 
+	// This works with gaborpapp's version but not reza's
+	mSyphonServer->publishTexture(mOutputFbo->getColorTexture());
+
+	// This doesn't work on gaborpapp's version but does work on reza's *AND* on the current Syphon master branch
+	// mSyphonServer->bind(vec2(getWindowWidth(), getWindowHeight()));
+	// gl::draw(randomFbo->getColorTexture());
+	// mSyphonServer->unbind();
+
+	// This works, with occasional glitches on gaborpapp's version but not reza's
+	// mSyphonServer->publishScreen();
+
+	// Draw the main window
+	gl::clear();
+
+	{
 		gl::ScopedDepth scpDepth(true);
 		gl::ScopedFaceCulling scpCull(true, GL_BACK);
 
@@ -303,9 +316,9 @@ void DigitalLifeApp::draw() {
 		gl::ScopedGlslProg scpShader(mRenderTexAsSphereShader);
 
 		gl::draw(geom::Sphere().center(vec3(0)).radius(1.0f).subdivisions(50));
-
-		gl::drawString(std::to_string(getAverageFps()), vec2(10.0f, getWindowHeight() - 40.0f), ColorA(1.0f, 1.0f, 1.0f, 1.0f));
 	}
+
+	gl::drawString(std::to_string(getAverageFps()), vec2(10.0f, getWindowHeight() - 40.0f), ColorA(1.0f, 1.0f, 1.0f, 1.0f));
 
 	// Debug zone
 	if (mActiveAppMode == AppMode::DEVELOPMENT) {
@@ -330,19 +343,6 @@ void DigitalLifeApp::draw() {
 			// gl::draw(mOutputFbo->getColorTexture(), Rectf(0, 0, getWindowWidth(), getWindowHeight() / 3));
 		}
 	}
-
-	// Publish to Syphon
-
-	// This works with gaborpapp's version but not reza's
-	mSyphonServer->publishTexture(mOutputFbo->getColorTexture());
-
-	// This doesn't work on gaborpapp's version but does work on reza's *AND* on the current Syphon master branch
-	// mSyphonServer->bind(vec2(getWindowWidth(), getWindowHeight()));
-	// gl::draw(randomFbo->getColorTexture());
-	// mSyphonServer->unbind();
-
-	// This works, with occasional glitches on gaborpapp's version but not reza's
-	// mSyphonServer->publishScreen();
 }
 
 CINDER_APP(DigitalLifeApp, RendererGl, & DigitalLifeApp::prepareSettings)
