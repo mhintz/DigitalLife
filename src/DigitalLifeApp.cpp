@@ -10,8 +10,10 @@
 #include "cinder/Serial.h"
 #include "cinder/Log.h"
 #include "cinder/audio/audio.h"
+#include "cinder/Timer.h"
 
 #include "Syphon.h"
+#include "choreograph/Choreograph.h"
 
 #include "MeshHelpers.h"
 
@@ -72,6 +74,9 @@ class DigitalLifeApp : public App {
 
 	// Narration playback and coordination stuff
 	audio::VoiceSamplePlayerNodeRef mNarrationPlayer;
+	ci::Timer mPlaybackFrameTimer;
+	choreograph::Output<float> mPlaybackProgress = 0.0f;
+	choreograph::Timeline mPlaybackTimeline;
 
 	// Debug and config stuff
 	CameraPersp mCamera;
@@ -119,12 +124,28 @@ void DigitalLifeApp::setup() {
 	mFlockingApp.setup();
 	mNetworkApp.setup();
 
-	// Setup audio track
-
+	// Setup audio track and coordinated simulation changes
 	audio::SourceFileRef narrationTrackFile = audio::load(loadAsset("AudioNarration.mp3"));
 	mNarrationPlayer = audio::Voice::create(narrationTrackFile);
 
-	mNarrationPlayer->getSamplePlayerNode()->setLoopEnabled();
+	mPlaybackTimeline.setDefaultRemoveOnFinish(false);
+
+	double const mNarrationDuration = secFromHMS(0.0, 5.0, 38.5); // the track is 5:38.5 long at the moment
+
+	mPlaybackTimeline.apply(& mPlaybackProgress)
+		.then<choreograph::RampTo>(mNarrationDuration, mNarrationDuration)
+		.startFn([&] { mNarrationPlayer->start(); })
+		.finishFn([&] { mNarrationPlayer->stop(); mPlaybackTimeline.resetTime(); });
+
+	mPlaybackTimeline.cue([&] { mActiveAppType = AppType::REACTION_DIFFUSION; }, secFromHMS(0, 0, 0.0));
+	mPlaybackTimeline.cue([&] { mActiveAppType = AppType::REACTION_DIFFUSION; }, secFromHMS(0, 0, 34.0));
+	mPlaybackTimeline.cue([&] { mActiveAppType = AppType::FLOCKING; }, secFromHMS(0, 1, 8.4));
+	mPlaybackTimeline.cue([&] { mActiveAppType = AppType::NETWORK; }, secFromHMS(0, 1, 56.1));
+	mPlaybackTimeline.cue([&] { mActiveAppType = AppType::REACTION_DIFFUSION; }, secFromHMS(0, 2, 41.4));
+	mPlaybackTimeline.cue([&] { mActiveAppType = AppType::FLOCKING; }, secFromHMS(0, 3, 21.1));
+	mPlaybackTimeline.cue([&] { mActiveAppType = AppType::NETWORK; }, secFromHMS(0, 4, 23.9));
+
+	mPlaybackFrameTimer.start();
 
 	// Setup viewing camera
 	mCamera.lookAt(vec3(0, 0, 3.5), vec3(0), vec3(0, 1, 0));
@@ -216,9 +237,8 @@ void DigitalLifeApp::update() {
 	}
 
 	if (mActiveAppMode == AppMode::DISPLAY) {
-		if (!mNarrationPlayer->isPlaying()) {
-			mNarrationPlayer->start();
-		}
+		mPlaybackTimeline.step(mPlaybackFrameTimer.getSeconds());
+		mPlaybackFrameTimer.start(); // Restart the timer each frame
 	}
 
 	switch (mActiveAppType) {
