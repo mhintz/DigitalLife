@@ -39,7 +39,7 @@ enum class AppMode {
 };
 
 class DigitalLifeApp : public App {
-  public:
+	public:
 	static void prepareSettings(Settings * settings);
 
 	void setup() override;
@@ -96,10 +96,10 @@ void DigitalLifeApp::setup() {
 	mSyphonServer->setName("DigitalLifeServer");
 
 	auto cubeObj = ObjLoader(loadAsset("BoxSides.obj"));
-    auto cubeVboMesh = gl::VboMesh::create(cubeObj, {
-        {gl::VboMesh::Layout().attrib(geom::Attrib::POSITION, 3), nullptr},
-        {gl::VboMesh::Layout().attrib(geom::Attrib::TEX_COORD_0, 2), nullptr}
-    });
+	auto cubeVboMesh = gl::VboMesh::create(cubeObj, {
+		{gl::VboMesh::Layout().attrib(geom::Attrib::POSITION, 3), nullptr},
+		{gl::VboMesh::Layout().attrib(geom::Attrib::TEX_COORD_0, 2), nullptr}
+	});
 	auto cubeShader = gl::GlslProg::create(loadAsset("DLRenderIntoCubeMap_v.glsl"), loadAsset("DLRenderIntoCubeMap_f.glsl"), loadAsset("DLRenderIntoCubeMap_triangles_g.glsl"));
 	mSparckConfigCube = gl::Batch::create(cubeVboMesh, cubeShader);
 	mSparckConfigDrawFbo = FboCubeMapLayered::create(OUTPUT_CUBE_MAP_SIDE, OUTPUT_CUBE_MAP_SIDE);
@@ -176,19 +176,19 @@ void DigitalLifeApp::update() {
 	if (mArduinoCxn && mArduinoCxn->getNumBytesAvailable() > 0) {
 		uint8_t ardMessage;
 		mArduinoCxn->readAvailableBytes(& ardMessage, 1);
-        
-        if (0 <= ardMessage && ardMessage <= 5) {
-            console() << "Disturb at: " << (int) ardMessage << std::endl;
-            vec3 disruptionVector = getDisruptionVector(ardMessage);
-            switch (mActiveAppType) {
-                case AppType::REACTION_DIFFUSION: mReactionDiffusionApp.disrupt(disruptionVector); break;
-                case AppType::FLOCKING: mFlockingApp.disrupt(disruptionVector); break;
-                case AppType::NETWORK: mNetworkApp.disrupt(disruptionVector); break;
-                case AppType::CUBE_DEBUG: break;
-            }
-        } else {
-            console() << "weird value from microphones: " << (int) ardMessage << std::endl;
-        }
+				
+		if (0 <= ardMessage && ardMessage <= 5) {
+			CI_LOG_I("Disturb at: " << (int) ardMessage);
+			vec3 disruptionVector = getDisruptionVector(ardMessage);
+			switch (mActiveAppType) {
+				case AppType::REACTION_DIFFUSION: mReactionDiffusionApp.disrupt(disruptionVector); break;
+				case AppType::FLOCKING: mFlockingApp.disrupt(disruptionVector); break;
+				case AppType::NETWORK: mNetworkApp.disrupt(disruptionVector); break;
+				case AppType::CUBE_DEBUG: break;
+			}
+		} else {
+			CI_LOG_W("weird value from microphones: " << (int) ardMessage);
+		}
 	}
 
 	if (mActiveAppMode == AppMode::DISPLAY) {
@@ -259,6 +259,8 @@ void DigitalLifeApp::draw() {
 		gl::ScopedGlslProg scpShader(mRenderTexAsSphereShader);
 
 		gl::draw(geom::Sphere().center(vec3(0)).radius(1.0f).subdivisions(50));
+
+		gl::drawString(std::to_string(getAverageFps()), vec2(10.0f, getWindowHeight() - 40.0f), ColorA(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 
 	// Debug zone
@@ -283,8 +285,6 @@ void DigitalLifeApp::draw() {
 
 			// gl::draw(mOutputFbo->getColorTexture(), Rectf(0, 0, getWindowWidth(), getWindowHeight() / 3));
 		}
-
-		gl::drawString(std::to_string(getAverageFps()), vec2(10.0f, getWindowHeight() - 40.0f), ColorA(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 
 	// Publish to Syphon
