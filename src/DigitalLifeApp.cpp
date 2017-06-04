@@ -50,14 +50,29 @@ class DigitalLifeApp : public App {
 
 	vec3 getDisruptionVector(uint8_t dir);
 
+	// App variables
 	gl::FboRef mOutputFbo;
 	uint8_t mAppTextureBind = 0;
 	gl::BatchRef mOutputBatch;
 	ciSyphon::ServerRef mSyphonServer;
 
+	// App state stuff
 	AppType mActiveAppType = AppType::REACTION_DIFFUSION;
 	AppMode mActiveAppMode = AppMode::DEVELOPMENT;
 
+	// Arduino connection stuff
+	SerialRef mArduinoCxn;
+	bool mArduinoNoCxnLogged = false;
+
+	// The simulations themselves
+	ReactionDiffusionApp mReactionDiffusionApp;
+	FlockingApp mFlockingApp;
+	NetworkApp mNetworkApp;
+
+	// Narration playback and coordination stuff
+	audio::VoiceSamplePlayerNodeRef mNarrationPlayer;
+
+	// Debug and config stuff
 	CameraPersp mCamera;
 	CameraUi mCameraUi;
 	gl::GlslProgRef mRenderTexAsSphereShader;
@@ -66,14 +81,6 @@ class DigitalLifeApp : public App {
 	FboCubeMapLayeredRef mSparckConfigDrawFbo;
 	gl::UboRef mSparckConfigDrawMatrices;
 	gl::TextureCubeMapRef drawDebugCube();
-
-	SerialRef mArduinoCxn;
-
-	ReactionDiffusionApp mReactionDiffusionApp;
-	FlockingApp mFlockingApp;
-	NetworkApp mNetworkApp;
-
-	audio::VoiceSamplePlayerNodeRef mNarrationPlayer;
 };
 
 void DigitalLifeApp::prepareSettings(Settings * settings) {
