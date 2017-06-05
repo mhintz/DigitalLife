@@ -75,6 +75,7 @@ class DigitalLifeApp : public App {
 	audio::VoiceSamplePlayerNodeRef mNarrationPlayer;
 	ci::Timer mPlaybackFrameTimer;
 	choreograph::Output<float> mPlaybackProgress = 0.0f;
+	choreograph::Output<float> mFrameAlpha = 0.0f;
 	choreograph::Timeline mPlaybackTimeline;
 
 	// Debug and config stuff
@@ -126,20 +127,50 @@ void DigitalLifeApp::setup() {
 
 	mPlaybackTimeline.setDefaultRemoveOnFinish(false);
 
-	double const mNarrationDuration = secFromHMS(0.0, 5.0, 38.5); // the track is 5:38.5 long at the moment
+	double const I1_start = secFromHMS(0, 0, 0.0);
+	double const I2_start = secFromHMS(0, 0, 34.0);
+	double const D1_start = secFromHMS(0, 1, 8.4);
+	double const D2_start = secFromHMS(0, 1, 56.1);
+	double const B1_start = secFromHMS(0, 2, 41.4);
+	double const F1_start = secFromHMS(0, 3, 21.1);
+	double const N1_start = secFromHMS(0, 4, 23.9);
+	double const narration_duration = secFromHMS(0.0, 5.0, 38.5); // the track is 5:38.5 long at the moment
+
+	double const fade_dur = 0.5;
+	double const last_fade_dur = 2.0;
 
 	mPlaybackTimeline.apply(& mPlaybackProgress)
-		.then<choreograph::RampTo>(mNarrationDuration, mNarrationDuration)
+		.then<choreograph::RampTo>(narration_duration, narration_duration)
 		.startFn([&] { mNarrationPlayer->stop(); mNarrationPlayer->start(); })
 		.finishFn([&] { mNarrationPlayer->stop(); mPlaybackTimeline.resetTime(); });
 
-	mPlaybackTimeline.cue([&] { mActiveAppType = AppType::REACTION_DIFFUSION; }, secFromHMS(0, 0, 0.0));
-	mPlaybackTimeline.cue([&] { mActiveAppType = AppType::REACTION_DIFFUSION; }, secFromHMS(0, 0, 34.0));
-	mPlaybackTimeline.cue([&] { mActiveAppType = AppType::FLOCKING; }, secFromHMS(0, 1, 8.4));
-	mPlaybackTimeline.cue([&] { mActiveAppType = AppType::NETWORK; }, secFromHMS(0, 1, 56.1));
-	mPlaybackTimeline.cue([&] { mActiveAppType = AppType::REACTION_DIFFUSION; }, secFromHMS(0, 2, 41.4));
-	mPlaybackTimeline.cue([&] { mActiveAppType = AppType::FLOCKING; }, secFromHMS(0, 3, 21.1));
-	mPlaybackTimeline.cue([&] { mActiveAppType = AppType::NETWORK; }, secFromHMS(0, 4, 23.9));
+	mPlaybackTimeline.apply(& mFrameAlpha)
+		.then<choreograph::RampTo>(1.0f, fade_dur)
+		.then<choreograph::Hold>(1.0f, D1_start - I1_start - 2.0 * fade_dur) // Hold for the entire intro - both I1 and I2
+		.then<choreograph::RampTo>(0.0f, fade_dur)
+		.then<choreograph::RampTo>(1.0f, fade_dur)
+		.then<choreograph::Hold>(1.0f, D2_start - D1_start - 2.0 * fade_dur) // D1
+		.then<choreograph::RampTo>(0.0f, fade_dur)
+		.then<choreograph::RampTo>(1.0f, fade_dur)
+		.then<choreograph::Hold>(1.0f, B1_start - D2_start - 2.0 * fade_dur) // D2
+		.then<choreograph::RampTo>(0.0f, fade_dur)
+		.then<choreograph::RampTo>(1.0f, fade_dur)
+		.then<choreograph::Hold>(1.0f, F1_start - B1_start - 2.0 * fade_dur) // B1
+		.then<choreograph::RampTo>(0.0f, fade_dur)
+		.then<choreograph::RampTo>(1.0f, fade_dur)
+		.then<choreograph::Hold>(1.0f, N1_start - F1_start - 2.0 * fade_dur) // F1
+		.then<choreograph::RampTo>(0.0f, fade_dur)
+		.then<choreograph::RampTo>(1.0f, fade_dur)
+		.then<choreograph::Hold>(1.0f, narration_duration - N1_start - fade_dur - last_fade_dur) // N1
+		.then<choreograph::RampTo>(0.0f, last_fade_dur); // Long fade to black at end
+
+	mPlaybackTimeline.cue([&] { mActiveAppType = AppType::REACTION_DIFFUSION; }, I1_start);
+	mPlaybackTimeline.cue([&] { mActiveAppType = AppType::REACTION_DIFFUSION; }, I2_start);
+	mPlaybackTimeline.cue([&] { mActiveAppType = AppType::FLOCKING; }, D1_start);
+	mPlaybackTimeline.cue([&] { mActiveAppType = AppType::NETWORK; }, D2_start);
+	mPlaybackTimeline.cue([&] { mActiveAppType = AppType::REACTION_DIFFUSION; }, B1_start);
+	mPlaybackTimeline.cue([&] { mActiveAppType = AppType::FLOCKING; }, F1_start);
+	mPlaybackTimeline.cue([&] { mActiveAppType = AppType::NETWORK; }, N1_start);
 
 	mPlaybackFrameTimer.start();
 
@@ -286,6 +317,8 @@ void DigitalLifeApp::draw() {
 
 		gl::ScopedTextureBind scpTex(appInstanceCubeMapFrame, mAppTextureBind);
 
+		mOutputBatch->getGlslProg()->uniform("uFrameAlpha", mFrameAlpha.value());
+
 		mOutputBatch->draw();
 	}
 
@@ -314,6 +347,8 @@ void DigitalLifeApp::draw() {
 
 		gl::ScopedTextureBind scpTex(appInstanceCubeMapFrame);
 		gl::ScopedGlslProg scpShader(mRenderTexAsSphereShader);
+
+		mRenderTexAsSphereShader->uniform("uFrameAlpha", mFrameAlpha.value());
 
 		gl::draw(geom::Sphere().center(vec3(0)).radius(1.0f).subdivisions(50));
 	}
