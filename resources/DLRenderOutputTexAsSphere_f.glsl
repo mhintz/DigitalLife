@@ -5,7 +5,8 @@ in highp vec3 aCubeMapTexCoord;
 out vec4 FragColor;
 
 uniform samplerCube uCubeMapTex;
+uniform float uFrameAlpha;
 
 void main() {
-  FragColor = texture(uCubeMapTex, aCubeMapTexCoord);
+  FragColor = uFrameAlpha * texture(uCubeMapTex, aCubeMapTexCoord);
 }
