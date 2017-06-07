@@ -236,10 +236,10 @@ vec3 getDisruptionVector(uint8_t dir) {
 	assert(0 <= dir && dir <= 5);
 
 	float const SLICE_INC = M_TWO_PI / 6.0f;
-	float const SLICE_START = -SLICE_INC / 2.0f;
+	float const SLICE_START = 0.0f; // No offset since microphones are in the middle of the slices
 
-	float zxAngle = SLICE_START + dir * SLICE_INC + randFloat() * SLICE_INC; // angle in the zx plane
-	float yAngle = clamp(M_PI / 8.0f + randFloat() * M_PI, 0, M_PI);
+	float zxAngle = dir * SLICE_INC + SLICE_START + randFloat() * SLICE_INC; // rotation angle in the zx plane about the y-axis (right-handed rotations)
+	float yAngle = clamp(- M_PI / 8.0f + randFloat() * M_PI, 0, M_PI); // angle relative to the vertical axis. 0 is all the way up, PI is all the way down
 
 	return getPointOnSphere(yAngle, zxAngle);
 }
