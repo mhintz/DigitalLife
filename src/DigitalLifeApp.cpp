@@ -60,7 +60,7 @@ class DigitalLifeApp : public App {
 
 	// App state stuff
 	AppType mActiveAppType = AppType::REACTION_DIFFUSION;
-	AppMode mActiveAppMode = AppMode::DISPLAY;
+	AppMode mActiveAppMode = AppMode::DEVELOPMENT;
 
 	// Arduino connection stuff
 	SerialRef mArduinoCxn;
@@ -270,6 +270,8 @@ void DigitalLifeApp::update() {
 	if (mActiveAppMode == AppMode::DISPLAY) {
 		mPlaybackTimeline.step(mPlaybackFrameTimer.getSeconds());
 		mPlaybackFrameTimer.start(); // Restart the timer each frame
+	} else if (mActiveAppMode == AppMode::DEVELOPMENT) {
+			mFrameAlpha = 1.0f;
 	}
 
 	switch (mActiveAppType) {
