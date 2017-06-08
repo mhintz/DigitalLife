@@ -140,14 +140,12 @@ void NetworkApp::setColorAttribs() {
 }
 
 void NetworkApp::disrupt(vec3 dir) {
-	float const DISRUPT_RADIUS = 0.40;
+	float const DISRUPT_RADIUS = 0.45;
 	vec3 const disruptDir = normalize(dir);
-
-	bool infectChange = randFloat() < 0.2;
 
 	for (auto & node : mNetworkNodes) {
 		if (distance(node.mPos, disruptDir) < DISRUPT_RADIUS) {
-			node.mInfected = infectChange;
+			node.mInfected = true;
 		}
 	}
 
