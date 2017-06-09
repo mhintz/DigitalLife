@@ -40,6 +40,18 @@ enum class AppMode {
 	DISPLAY
 };
 
+vec3 getDisruptionVector(uint8_t dir) {
+	assert(0 <= dir && dir <= 5);
+
+	float const SLICE_INC = M_TWO_PI / 6.0f;
+	float const SLICE_START = 0.0f; // No offset since microphones are in the middle of the slices
+
+	float zxAngle = dir * SLICE_INC + SLICE_START + randFloat() * SLICE_INC; // rotation angle in the zx plane about the y-axis (right-handed rotations)
+	float yAngle = clamp(- M_PI / 8.0f + randFloat() * M_PI, 0, M_PI); // angle relative to the vertical axis. 0 is all the way up, PI is all the way down
+
+	return getPointOnSphere(yAngle, zxAngle);
+}
+
 class DigitalLifeApp : public App {
 	public:
 	static void prepareSettings(Settings * settings);
@@ -196,6 +208,14 @@ void DigitalLifeApp::keyDown(KeyEvent evt) {
 			mActiveAppType = AppType::CUBE_DEBUG;
 		}
 
+		if (evt.getCode() == KeyEvent::KEY_d) {
+			switch (mActiveAppType) {
+				case AppType::REACTION_DIFFUSION: mReactionDiffusionApp.disrupt(getDisruptionVector(0)); break;
+				case AppType::FLOCKING: mFlockingApp.disrupt(getDisruptionVector(0)); break;
+				case AppType::NETWORK: mNetworkApp.disrupt(getDisruptionVector(0)); break;
+			}
+		}
+
 		if (evt.getCode() == KeyEvent::KEY_SPACE) {
 			if (mNarrationPlayer->isPlaying()) {
 				mNarrationPlayer->pause();
@@ -230,18 +250,6 @@ SerialRef DigitalLifeApp::attemptArduinoCxn() {
 	}
 
 	return nullptr;
-}
-
-vec3 getDisruptionVector(uint8_t dir) {
-	assert(0 <= dir && dir <= 5);
-
-	float const SLICE_INC = M_TWO_PI / 6.0f;
-	float const SLICE_START = 0.0f; // No offset since microphones are in the middle of the slices
-
-	float zxAngle = dir * SLICE_INC + SLICE_START + randFloat() * SLICE_INC; // rotation angle in the zx plane about the y-axis (right-handed rotations)
-	float yAngle = clamp(- M_PI / 8.0f + randFloat() * M_PI, 0, M_PI); // angle relative to the vertical axis. 0 is all the way up, PI is all the way down
-
-	return getPointOnSphere(yAngle, zxAngle);
 }
 
 void DigitalLifeApp::update() {

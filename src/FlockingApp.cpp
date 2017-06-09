@@ -132,6 +132,8 @@ void FlockingApp::update()
 	mBirdVelUpdateProg->uniform("uCohesionDist", mCohesionDist);
 	mBirdVelUpdateProg->uniform("uCohesionMod", mCohesionMod);
 
+	mBirdDisruptProg->uniform("uMaxSpeed", mMaxSpeed);
+
 	// Run the simulation itself
 	gl::ScopedBlend scpBlend(false); // No alpha blending when running the simulation - because alpha is used for data
 	gl::ScopedViewport scpView(0, 0, mFboSide, mFboSide);
