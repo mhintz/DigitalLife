@@ -43,11 +43,11 @@ enum class AppMode {
 vec3 getDisruptionVector(uint8_t dir) {
 	assert(0 <= dir && dir <= 5);
 
-	float const SLICE_INC = M_TWO_PI / 6.0f;
+	float const SLICE_INC = -M_TWO_PI / 6.0f;
 	float const SLICE_START = 0.0f; // No offset since microphones are in the middle of the slices
 
-	float zxAngle = dir * SLICE_INC + SLICE_START + randFloat() * SLICE_INC; // rotation angle in the zx plane about the y-axis (right-handed rotations)
-	float yAngle = clamp(- M_PI / 8.0f + randFloat() * M_PI, 0, M_PI); // angle relative to the vertical axis. 0 is all the way up, PI is all the way down
+	float zxAngle = dir * SLICE_INC + SLICE_START + randFloat(0.40f, 0.60f) * SLICE_INC; // rotation angle in the zx plane about the y-axis (right-handed rotations)
+	float yAngle = randFloat(M_PI * 3.0f / 9.0f, M_PI * 5.0f / 9.0f); // angle relative to the vertical axis. 0 is all the way up, PI is all the way down
 
 	return getPointOnSphere(yAngle, zxAngle);
 }
