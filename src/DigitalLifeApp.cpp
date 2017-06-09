@@ -257,7 +257,7 @@ void DigitalLifeApp::update() {
 		mArduinoCxn = attemptArduinoCxn();
 	}
 
-	if (mArduinoCxn && mArduinoCxn->getNumBytesAvailable() > 0) {
+	if (mArduinoCxn && mArduinoCxn->getNumBytesAvailable() > 0 && (mActiveAppMode == AppMode::DEVELOPMENT || getElapsedSeconds() > 60)) {
 		uint8_t ardMessage;
 		mArduinoCxn->readAvailableBytes(& ardMessage, 1);
 				
