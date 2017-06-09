@@ -39,16 +39,11 @@ void NetworkApp::setup()
 			float d2 = distance(node.mPos, p2->mPos);
 			return d1 < d2;
 		});
-		// Take the nearest six which don't already have six links
-		// (knowing the the first one will be the node itself)
-		for (int i = 1; i < nodePointers.size(); i++) {
-			if (node.mLinks.size() >= mNumLinksPerNode) { break; }
-
-			if (nodePointers[i]->mLinks.size() < mNumLinksPerNode) {
-				node.mLinks.insert(nodePointers[i]->mId);
-				nodePointers[i]->mLinks.insert(node.mId);
-				mNetworkLinks.push_back(std::make_pair(nodePointers[i]->mId, node.mId));
-			}
+		// Take the nearest ones, knowing the the first one will be the node itself
+		for (int i = 1; i <= mNumLinksPerNode; i++) {
+			node.mLinks.insert(nodePointers[i]->mId);
+			nodePointers[i]->mLinks.insert(node.mId);
+			mNetworkLinks.push_back(std::make_pair(nodePointers[i]->mId, node.mId));
 		}
 	}
 

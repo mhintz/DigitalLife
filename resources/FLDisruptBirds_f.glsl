@@ -6,10 +6,11 @@ uniform sampler2D uPositions;
 uniform sampler2D uVelocities;
 
 uniform vec3 uDisruptPoint;
+uniform float uMaxSpeed;
 
 out vec4 FragColor; // new bird velocity
 
-#define DISRUPT_RADIUS 0.35
+#define DISRUPT_RADIUS 0.45
 
 vec3 setMag(vec3 v, float mag) {
   return normalize(v) * mag;
@@ -23,7 +24,7 @@ void main() {
   vec3 fleeVec = pos - uDisruptPoint;  
 
   if (length(fleeVec) < DISRUPT_RADIUS) {
-    FragColor = vec4(setMag(fleeVec - (dot(fleeVec, pos) * normalize(pos)), length(vel)), 1);
+    FragColor = vec4(setMag(fleeVec - (dot(fleeVec, pos) * normalize(pos)), uMaxSpeed), 1);
   } else {
     FragColor = vec4(vel, 1);
   }

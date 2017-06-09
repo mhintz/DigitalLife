@@ -33,10 +33,10 @@ public:
 
 	void setColorAttribs();
 
-	int const mNumNetworkNodes = 1500;
+	int const mNumNetworkNodes = 2000;
 	int const mNumLinksPerNode = 8;
-	float const mNodeDisinfectChance = 0.05;
-	float const mSpreadInfectionChance = 0.01;
+	float const mNodeDisinfectChance = 0.04;
+	float const mSpreadInfectionChance = 0.007;
 	int const mMinInfected = 20;
 
 	std::vector<NetworkNode> mNetworkNodes;

@@ -19,7 +19,7 @@ public:
 	void disrupt(ci::vec3 dir);
 
 	float mMinSpeed = 0.0030;
-	float mMaxSpeed = 0.0070;
+	float mMaxSpeed = 0.0080;
 
 	float mMinForce = 0.0000;
 	float mMaxForce = 0.0010;
