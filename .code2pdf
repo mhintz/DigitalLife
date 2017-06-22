@@ -1,0 +1,14 @@
+:directories:
+  - .git
+  - xcode
+  - assets
+  - src/gen_cfig
+:files:
+  - .code2pdf
+  - .DS_Store
+  - include/Resources.h
+  - .gitignore
+  - Makefile
+  - resources/AudioNarration.mp3
+  - resources/BoxSides.obj
+  - resources/CinderApp.icns
