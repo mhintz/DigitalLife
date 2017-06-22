@@ -41,6 +41,7 @@
 		CEEAC8BD1EE4C8260065E93A /* Syphon.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = CEEAC8951EE4C6190065E93A /* Syphon.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		EF0262E41E70660E005669EA /* ReactionDiffusionApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF0262E21E70660E005669EA /* ReactionDiffusionApp.cpp */; };
 		EF0263081E70AAA8005669EA /* NetworkApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF0263061E70AAA8005669EA /* NetworkApp.cpp */; };
+		EF055A011EFC17C10050B4D6 /* CalibrationPreciseAlignment.obj in Resources */ = {isa = PBXBuildFile; fileRef = EF055A001EFC17C10050B4D6 /* CalibrationPreciseAlignment.obj */; };
 		EF095A181EE499560080D7B4 /* DLRenderIntoCubeMap_lines_g.glsl in Resources */ = {isa = PBXBuildFile; fileRef = EF095A031EE499560080D7B4 /* DLRenderIntoCubeMap_lines_g.glsl */; };
 		EF095A191EE499560080D7B4 /* DLRenderIntoCubeMap_points_g.glsl in Resources */ = {isa = PBXBuildFile; fileRef = EF095A041EE499560080D7B4 /* DLRenderIntoCubeMap_points_g.glsl */; };
 		EF095A1A1EE499560080D7B4 /* DLRenderIntoCubeMap_triangles_g.glsl in Resources */ = {isa = PBXBuildFile; fileRef = EF095A051EE499560080D7B4 /* DLRenderIntoCubeMap_triangles_g.glsl */; };
@@ -167,6 +168,7 @@
 		EF0262E31E70660E005669EA /* ReactionDiffusionApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReactionDiffusionApp.h; path = ../src/ReactionDiffusionApp.h; sourceTree = "<group>"; };
 		EF0263061E70AAA8005669EA /* NetworkApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NetworkApp.cpp; path = ../src/NetworkApp.cpp; sourceTree = "<group>"; };
 		EF0263071E70AAA8005669EA /* NetworkApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NetworkApp.h; path = ../src/NetworkApp.h; sourceTree = "<group>"; };
+		EF055A001EFC17C10050B4D6 /* CalibrationPreciseAlignment.obj */ = {isa = PBXFileReference; lastKnownFileType = text; name = CalibrationPreciseAlignment.obj; path = ../resources/CalibrationPreciseAlignment.obj; sourceTree = "<group>"; };
 		EF095A031EE499560080D7B4 /* DLRenderIntoCubeMap_lines_g.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = DLRenderIntoCubeMap_lines_g.glsl; path = ../resources/DLRenderIntoCubeMap_lines_g.glsl; sourceTree = "<group>"; };
 		EF095A041EE499560080D7B4 /* DLRenderIntoCubeMap_points_g.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = DLRenderIntoCubeMap_points_g.glsl; path = ../resources/DLRenderIntoCubeMap_points_g.glsl; sourceTree = "<group>"; };
 		EF095A051EE499560080D7B4 /* DLRenderIntoCubeMap_triangles_g.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = DLRenderIntoCubeMap_triangles_g.glsl; path = ../resources/DLRenderIntoCubeMap_triangles_g.glsl; sourceTree = "<group>"; };
@@ -305,17 +307,18 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				EF095A351EE49BA40080D7B4 /* DLRenderIntoCubeMap_f.glsl */,
-				EF095A311EE49B4D0080D7B4 /* DLOutputCubeMapToRect_f.glsl */,
-				EF095A321EE49B4D0080D7B4 /* DLOutputCubeMapToRect_v.glsl */,
 				EF095A2D1EE49B1A0080D7B4 /* AudioNarration.mp3 */,
 				EF095A2E1EE49B1A0080D7B4 /* BoxSides.obj */,
+				EF055A001EFC17C10050B4D6 /* CalibrationPreciseAlignment.obj */,
 				EF095A031EE499560080D7B4 /* DLRenderIntoCubeMap_lines_g.glsl */,
 				EF095A041EE499560080D7B4 /* DLRenderIntoCubeMap_points_g.glsl */,
 				EF095A051EE499560080D7B4 /* DLRenderIntoCubeMap_triangles_g.glsl */,
 				EF095A061EE499560080D7B4 /* DLRenderIntoCubeMap_v.glsl */,
 				EF095A071EE499560080D7B4 /* DLRenderOutputTexAsSphere_f.glsl */,
 				EF095A081EE499560080D7B4 /* DLRenderOutputTexAsSphere_v.glsl */,
+				EF095A351EE49BA40080D7B4 /* DLRenderIntoCubeMap_f.glsl */,
+				EF095A311EE49B4D0080D7B4 /* DLOutputCubeMapToRect_f.glsl */,
+				EF095A321EE49B4D0080D7B4 /* DLOutputCubeMapToRect_v.glsl */,
 				EF095A091EE499560080D7B4 /* FLDisruptBirds_f.glsl */,
 				EF095A0A1EE499560080D7B4 /* FLRenderBirds_f.glsl */,
 				EF095A0B1EE499560080D7B4 /* FLRenderBirds_g.glsl */,
@@ -530,6 +533,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EF055A011EFC17C10050B4D6 /* CalibrationPreciseAlignment.obj in Resources */,
 				EF095A331EE49B4D0080D7B4 /* DLOutputCubeMapToRect_f.glsl in Resources */,
 				EF095A361EE49BA40080D7B4 /* DLRenderIntoCubeMap_f.glsl in Resources */,
 				EF095A341EE49B4D0080D7B4 /* DLOutputCubeMapToRect_v.glsl in Resources */,
