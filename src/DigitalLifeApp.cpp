@@ -32,7 +32,8 @@ enum class AppType {
 	REACTION_DIFFUSION,
 	FLOCKING,
 	NETWORK,
-	CUBE_DEBUG
+	CUBE_DEBUG,
+	CALIB_SPHERE
 };
 
 enum class AppMode {
@@ -72,7 +73,7 @@ class DigitalLifeApp : public App {
 
 	// App state stuff
 	AppType mActiveAppType = AppType::REACTION_DIFFUSION;
-	AppMode mActiveAppMode = AppMode::DISPLAY;
+	AppMode mActiveAppMode = AppMode::DEVELOPMENT;
 
 	// Arduino connection stuff
 	SerialRef mArduinoCxn;
@@ -95,10 +96,12 @@ class DigitalLifeApp : public App {
 	CameraUi mCameraUi;
 	gl::GlslProgRef mRenderTexAsSphereShader;
 
-	gl::BatchRef mSparckConfigCube;
 	FboCubeMapLayeredRef mSparckConfigDrawFbo;
 	gl::UboRef mSparckConfigDrawMatrices;
+	gl::BatchRef mSparckConfigCube;
+	gl::BatchRef mPreciseCalibObj;
 	gl::TextureCubeMapRef drawDebugCube();
+	gl::TextureCubeMapRef drawCalibObj();
 };
 
 void DigitalLifeApp::prepareSettings(Settings * settings) {
@@ -117,6 +120,12 @@ void DigitalLifeApp::setup() {
 	mSyphonServer = ciSyphon::Server::create();
 	mSyphonServer->setName("DigitalLifeServer");
 
+	// Debug stuff
+	uint8_t cubeMatrixBufferBinding = 1;
+	mSparckConfigDrawFbo = FboCubeMapLayered::create(OUTPUT_CUBE_MAP_SIDE, OUTPUT_CUBE_MAP_SIDE);
+	mSparckConfigDrawMatrices = mSparckConfigDrawFbo->generateCameraMatrixBuffer();
+	mSparckConfigDrawMatrices->bindBufferBase(cubeMatrixBufferBinding);
+
 	auto cubeObj = ObjLoader(loadResource("BoxSides.obj"));
 	auto cubeVboMesh = gl::VboMesh::create(cubeObj, {
 		{gl::VboMesh::Layout().attrib(geom::Attrib::POSITION, 3), nullptr},
@@ -124,11 +133,19 @@ void DigitalLifeApp::setup() {
 	});
 	auto cubeShader = gl::GlslProg::create(loadResource("DLRenderIntoCubeMap_v.glsl"), loadResource("DLRenderIntoCubeMap_f.glsl"), loadResource("DLRenderIntoCubeMap_triangles_g.glsl"));
 	mSparckConfigCube = gl::Batch::create(cubeVboMesh, cubeShader);
-	mSparckConfigDrawFbo = FboCubeMapLayered::create(OUTPUT_CUBE_MAP_SIDE, OUTPUT_CUBE_MAP_SIDE);
-	mSparckConfigDrawMatrices = mSparckConfigDrawFbo->generateCameraMatrixBuffer();
-	mSparckConfigDrawMatrices->bindBufferBase(1);
-	cubeShader->uniformBlock("uMatrices", 1);
+	cubeShader->uniformBlock("uMatrices", cubeMatrixBufferBinding);
 
+	// More precise calibration stuff
+	auto calibObj = ObjLoader(loadResource("CalibrationPreciseAlignment.obj"));
+	auto calibVboMesh = gl::VboMesh::create(calibObj, {
+		{gl::VboMesh::Layout().attrib(geom::Attrib::POSITION, 3), nullptr},
+		{gl::VboMesh::Layout().attrib(geom::Attrib::TEX_COORD_0, 2), nullptr}
+	});
+	auto calibShader = gl::GlslProg::create(loadResource("DLRenderIntoCubeMap_v.glsl"), loadResource("DLRenderIntoCubeMap_f.glsl"), loadResource("DLRenderIntoCubeMap_triangles_g.glsl"));
+	mPreciseCalibObj = gl::Batch::create(calibVboMesh, calibShader);
+	calibShader->uniformBlock("uMatrices", cubeMatrixBufferBinding);
+
+	// App setup
 	mReactionDiffusionApp.setup();
 	mFlockingApp.setup();
 	mNetworkApp.setup();
@@ -206,6 +223,8 @@ void DigitalLifeApp::keyDown(KeyEvent evt) {
 			mActiveAppType = AppType::NETWORK;
 		} else if (evt.getCode() == KeyEvent::KEY_4) {
 			mActiveAppType = AppType::CUBE_DEBUG;
+		} else if (evt.getCode() == KeyEvent::KEY_5) {
+			mActiveAppType = AppType::CALIB_SPHERE;
 		}
 
 		if (evt.getCode() == KeyEvent::KEY_d) {
@@ -269,6 +288,7 @@ void DigitalLifeApp::update() {
 				case AppType::FLOCKING: mFlockingApp.disrupt(disruptionVector); break;
 				case AppType::NETWORK: mNetworkApp.disrupt(disruptionVector); break;
 				case AppType::CUBE_DEBUG: break;
+				case AppType::CALIB_SPHERE: break;
 			}
 		} else {
 			CI_LOG_W("weird value from microphones: " << (int) ardMessage);
@@ -287,6 +307,7 @@ void DigitalLifeApp::update() {
 		case AppType::FLOCKING: mFlockingApp.update(); break;
 		case AppType::NETWORK: mNetworkApp.update(); break;
 		case AppType::CUBE_DEBUG: break;
+		case AppType::CALIB_SPHERE: break;
 	}
 }
 
@@ -306,6 +327,24 @@ gl::TextureCubeMapRef DigitalLifeApp::drawDebugCube() {
 	return mSparckConfigDrawFbo->getColorTex();
 }
 
+gl::TextureCubeMapRef DigitalLifeApp::drawCalibObj() {
+	gl::ScopedViewport scpView(0, 0, mSparckConfigDrawFbo->getWidth(), mSparckConfigDrawFbo->getHeight());
+
+	gl::ScopedMatrices scpMat;
+
+	gl::ScopedFramebuffer scpFbo(GL_FRAMEBUFFER, mSparckConfigDrawFbo->getId());
+
+	gl::clear(Color(0, 0, 0));
+
+	gl::ScopedColor scpColor(Color(0, 1, 0));
+
+	gl::ScopedPolygonMode scpPolyMode(GL_LINE);
+
+	mPreciseCalibObj->draw();
+
+	return mSparckConfigDrawFbo->getColorTex();
+}
+
 void DigitalLifeApp::draw() {
 	gl::TextureCubeMapRef appInstanceCubeMapFrame;
 	switch (mActiveAppType) {
@@ -313,6 +352,7 @@ void DigitalLifeApp::draw() {
 		case AppType::FLOCKING: appInstanceCubeMapFrame = mFlockingApp.draw(); break;
 		case AppType::NETWORK: appInstanceCubeMapFrame = mNetworkApp.draw(); break;
 		case AppType::CUBE_DEBUG: appInstanceCubeMapFrame = drawDebugCube(); break;
+		case AppType::CALIB_SPHERE: appInstanceCubeMapFrame = drawCalibObj(); break;
 	}
 
 	// Draw the cubemap to the wide FBO
