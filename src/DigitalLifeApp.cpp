@@ -73,7 +73,11 @@ class DigitalLifeApp : public App {
 
 	// App state stuff
 	AppType mActiveAppType = AppType::REACTION_DIFFUSION;
+#if DEBUG == 1
 	AppMode mActiveAppMode = AppMode::DEVELOPMENT;
+#else
+	AppMode mActiveAppMode = AppMode::DISPLAY;
+#endif
 
 	// Arduino connection stuff
 	SerialRef mArduinoCxn;
